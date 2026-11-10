@@ -7,7 +7,11 @@ function parseBody(body) {
   if (body instanceof FormData) {
     const obj = {};
     body.forEach((val, key) => {
-      obj[key] = val;
+      try {
+        obj[key] = JSON.parse(val);
+      } catch {
+        obj[key] = val;
+      }
     });
     return obj;
   }

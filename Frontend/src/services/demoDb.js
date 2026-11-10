@@ -18,10 +18,15 @@ function getInitialDestinations() {
     label: d.label || "Curated",
     price: parseInt(String(d.price).replace(/[^0-9]/g, ""), 10) || 19500,
     duration_days: parseInt(String(d.duration).replace(/[^0-9]/g, ""), 10) || 6,
+    duration: d.duration || "6 days",
     season: d.season || "Year Round",
     description: d.description || "",
     highlights: Array.isArray(d.highlights) ? d.highlights : ["Curated stays", "Private driver", "Scenic trails"],
+    image: d.image,
     image_url: d.image,
+    media: [{ id: `m-${index + 1}`, url: d.image, type: "image", is_primary: true }],
+    gallery: d.gallery || [],
+    timeline: d.timeline || [],
     is_published: index !== 10, // make Andaman a draft for testing published/draft toggling!
     featured: index < 3,
     created_at: new Date(Date.now() - (index * 86400000)).toISOString(),
@@ -125,6 +130,11 @@ export const demoDb = {
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/^-|-$/g, "");
 
+    const resolvedImage =
+      data.image_url ||
+      data.image ||
+      "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=1400&q=85";
+
     const newDest = {
       id: newId,
       name: data.name || data.title || "New Yatra",
@@ -137,6 +147,7 @@ export const demoDb = {
       label: data.label || "Curated",
       price: parseInt(String(data.price || "18500").replace(/[^0-9]/g, ""), 10) || 18500,
       duration_days: parseInt(String(data.duration_days || data.duration || "6").replace(/[^0-9]/g, ""), 10) || 6,
+      duration: data.duration || `${data.duration_days || 6} days`,
       season: data.season || "Year Round",
       description: data.description || "",
       highlights: Array.isArray(data.highlights)
@@ -144,12 +155,13 @@ export const demoDb = {
         : typeof data.highlights === "string"
         ? data.highlights.split(",").map((s) => s.trim()).filter(Boolean)
         : ["Private transit", "Boutique stays"],
-      image_url:
-        data.image_url ||
-        data.image ||
-        "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=1400&q=85",
-      is_published: data.is_published !== undefined ? Boolean(data.is_published) : true,
-      featured: Boolean(data.featured),
+      image: resolvedImage,
+      image_url: resolvedImage,
+      media: [{ id: `m-${Date.now()}`, url: resolvedImage, type: "image", is_primary: true }],
+      gallery: Array.isArray(data.gallery) ? data.gallery : [],
+      timeline: Array.isArray(data.timeline) ? data.timeline : [],
+      is_published: data.is_published !== undefined ? (data.is_published === true || data.is_published === "true") : true,
+      featured: data.featured === true || data.featured === "true",
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
@@ -169,9 +181,39 @@ export const demoDb = {
     }
 
     const existing = list[index];
+    const resolvedImage =
+      data.image_url ||
+      data.image ||
+      existing.image ||
+      existing.image_url ||
+      "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=1400&q=85";
+
+    const isPublished =
+      data.is_published !== undefined
+        ? (data.is_published === true || data.is_published === "true")
+        : existing.is_published;
+
+    const isFeatured =
+      data.featured !== undefined
+        ? (data.featured === true || data.featured === "true")
+        : Boolean(existing.featured);
+
     const updated = {
       ...existing,
       ...data,
+      name: data.name || data.title || existing.name,
+      title: data.title || data.name || existing.title || existing.name,
+      slug: data.slug || existing.slug,
+      state: data.state !== undefined ? data.state : existing.state,
+      city: data.city !== undefined ? data.city : existing.city,
+      country: data.country !== undefined ? data.country : existing.country,
+      region: data.region !== undefined ? data.region : existing.region,
+      label: data.label !== undefined ? data.label : existing.label,
+      image: resolvedImage,
+      image_url: resolvedImage,
+      media: [{ id: `m-${id}`, url: resolvedImage, type: "image", is_primary: true }],
+      gallery: Array.isArray(data.gallery) ? data.gallery : existing.gallery || [],
+      timeline: Array.isArray(data.timeline) ? data.timeline : existing.timeline || [],
       highlights: Array.isArray(data.highlights)
         ? data.highlights
         : typeof data.highlights === "string"
@@ -179,7 +221,11 @@ export const demoDb = {
         : existing.highlights,
       price: data.price !== undefined ? parseInt(String(data.price).replace(/[^0-9]/g, ""), 10) || existing.price : existing.price,
       duration_days: data.duration_days !== undefined ? parseInt(String(data.duration_days).replace(/[^0-9]/g, ""), 10) || existing.duration_days : existing.duration_days,
-      is_published: data.is_published !== undefined ? Boolean(data.is_published) : existing.is_published,
+      duration: data.duration || `${data.duration_days || existing.duration_days || 6} days`,
+      season: data.season !== undefined ? data.season : existing.season,
+      description: data.description !== undefined ? data.description : existing.description,
+      is_published: isPublished,
+      featured: isFeatured,
       updated_at: new Date().toISOString(),
     };
 

@@ -10,17 +10,19 @@ export async function getAdminDestinations({ page = 1, pageSize = 20, search = "
   return request(`/admin/destinations?${params.toString()}`);
 }
 
-export async function createAdminDestination(formData) {
+export async function createAdminDestination(payload) {
+  const isForm = payload instanceof FormData;
   return request("/admin/destinations", {
     method: "POST",
-    body: formData,
+    body: isForm ? payload : JSON.stringify(payload),
   });
 }
 
-export async function updateAdminDestination(id, formData) {
+export async function updateAdminDestination(id, payload) {
+  const isForm = payload instanceof FormData;
   return request(`/admin/destinations/${id}`, {
     method: "PUT",
-    body: formData,
+    body: isForm ? payload : JSON.stringify(payload),
   });
 }
 
