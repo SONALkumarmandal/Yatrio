@@ -24,6 +24,9 @@ export function Footer() {
               Thoughtfully planned holidays across India and beyond. Real humans, tailored routes, and zero rush.
             </p>
             <p className="mt-2 text-xs font-mono text-warm">yatra (journey) + yatri (traveller)</p>
+            <p className="mt-1.5 text-xs text-cream/60">
+              Yatreo is a part of <strong className="text-cream font-semibold">Rishav Travels</strong> · Flying High since 25+ years.
+            </p>
 
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <a

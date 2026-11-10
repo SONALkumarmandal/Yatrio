@@ -33,12 +33,15 @@ Phone: ${phone || "Will chat here on WhatsApp"}`;
         <div className="mt-2.5">
           <Eyebrow>Human Concierge</Eyebrow>
         </div>
-        <h1 className="mt-2 font-display text-2xl font-semibold tracking-tight text-ink sm:text-4xl">
+        <div className="mt-2.5 inline-flex items-center gap-2 rounded-full border border-teal/20 bg-teal/5 px-3.5 py-1 text-xs font-semibold text-teal">
+          <Sparkles className="text-gold" size={13} />
+          <span>Yatreo is a part of Rishav Travels · Flying High since 25+ years</span>
+        </div>
+        <h1 className="mt-3 font-display text-2xl font-semibold tracking-tight text-ink sm:text-4xl">
           Say hello. We love talking trips.
         </h1>
         <p className="mt-1.5 text-sm leading-relaxed text-muted sm:text-base">
-          Whether you have a rough idea or an exact date, our team is right here on WhatsApp to brainstorm routes and
-          stays.
+          Whether you have a rough idea or an exact date, our team at Yatreo (a part of Rishav Travels) is right here on WhatsApp to craft your 100% tailor-made package.
         </p>
       </div>
 
@@ -85,13 +88,26 @@ Phone: ${phone || "Will chat here on WhatsApp"}`;
               <p className="text-[11px] text-muted/70">Monday to Sunday</p>
             </div>
           </div>
+
+          <div className="rounded-2xl border border-teal/20 bg-teal/5 p-4 text-xs text-ink/85 flex items-start gap-3">
+            <Sparkles className="text-gold shrink-0 mt-0.5" size={16} />
+            <div>
+              <p className="font-semibold text-teal">A Venture of Rishav Travels</p>
+              <p className="mt-0.5 text-[11px] leading-relaxed text-muted">
+                Yatreo is a part of Rishav Travels — backing every journey with 25+ years of verified on-ground operations, direct fleet transit, and zero hidden costs.
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Quick Message Form */}
         <div className="rounded-3xl border border-sand bg-white p-6 shadow-sm sm:p-8">
-          <h2 className="font-display text-xl font-semibold text-ink">Send a trip note</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="font-display text-xl font-semibold text-ink">Request a Tailor-made Package</h2>
+            <span className="rounded-full bg-gold/15 px-2.5 py-0.5 text-[10px] font-bold uppercase text-warm-dark">Custom</span>
+          </div>
           <p className="mt-1 text-xs text-muted">
-            Fill this out and it will automatically format into your WhatsApp conversation with a planner.
+            Share your thoughts below and we’ll design a tailor-made package directly in your WhatsApp conversation.
           </p>
 
           <form className="mt-6 space-y-4" onSubmit={handleSubmit}>

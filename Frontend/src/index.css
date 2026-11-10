@@ -883,17 +883,17 @@ footer > div > div:first-child p {
   width: min(1240px, 100%);
   min-height: auto;
   grid-template-columns: 1.15fr 0.85fr;
-  align-items: stretch;
+  align-items: center;
   gap: 36px;
   margin: 0 auto;
-  padding: 124px 28px 36px;
+  padding: 68px 28px 100px;
 }
 
 .hero-content {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   width: auto;
   margin: 0;
   padding: 0;
@@ -914,7 +914,7 @@ footer > div > div:first-child p {
 
 .hero-description {
   max-width: 480px;
-  margin: 8px 0 12px;
+  margin: 4px 0 8px;
   color: var(--color-muted);
   font-size: 0.95rem;
   line-height: 1.55;
@@ -922,41 +922,35 @@ footer > div > div:first-child p {
 
 .hero-sun {
   position: absolute;
-  top: 75px;
-  left: 18%;
-  width: 320px;
-  height: 320px;
+  top: 0px;
+  left: 6%;
+  width: 420px;
+  height: 420px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgb(244 169 59 / 35%) 0%, rgb(244 169 59 / 12%) 52%, transparent 72%);
+  background: radial-gradient(circle, rgb(244 169 59 / 24%) 0%, rgb(244 169 59 / 8%) 48%, transparent 72%);
   pointer-events: none;
-  filter: blur(8px);
+  filter: blur(28px);
 }
 
-.hero-flight-path {
+.hero-flight-arc {
   position: absolute;
-  top: 105px;
-  left: 48%;
+  top: 48px;
+  left: 45%;
   z-index: 2;
-  display: flex;
-  width: 105px;
-  height: 36px;
-  align-items: flex-start;
-  border-top: 1.5px dashed rgb(15 92 94 / 45%);
-  border-radius: 50%;
-  color: var(--color-teal);
-  transform: rotate(-10deg);
+  pointer-events: none;
 }
 
-.hero-flight-path svg {
-  margin: -10px 0 0 68px;
-  transform: rotate(38deg);
+@media (max-width: 1023px) {
+  .hero-flight-arc {
+    display: none;
+  }
 }
 
 .hero-visual {
   position: relative;
   display: flex;
-  min-height: 410px;
-  height: 100%;
+  min-height: 400px;
+  max-height: 480px;
   overflow: visible;
   border: 6px solid white;
   border-radius: 26px;
@@ -1039,7 +1033,7 @@ footer > div > div:first-child p {
   bottom: -1px;
   left: 0;
   z-index: 2;
-  height: 84px;
+  height: 56px;
   pointer-events: none;
 }
 
@@ -1650,7 +1644,7 @@ footer > div {
   .hero-inner {
     grid-template-columns: 1fr 0.8fr;
     gap: 24px;
-    padding: 86px 20px 36px;
+    padding: 86px 20px 68px;
   }
 
   .hero-title {

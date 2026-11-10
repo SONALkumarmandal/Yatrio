@@ -19,6 +19,7 @@ import { useAuth } from "../context/AuthContext";
 import { YatreoMark } from "../components/layout/Logo";
 import * as adminApi from "../services/adminApi";
 import * as destinationsApi from "../services/destinationsApi";
+import { demoDb, resetDemoDb } from "../services/demoDb";
 
 export function AdminPage() {
   const { user, isAdmin, loading: authLoading } = useAuth();
@@ -51,13 +52,7 @@ export function AdminPage() {
   const [formPublished, setFormPublished] = useState(true);
 
   useEffect(() => {
-    if (!authLoading) {
-      if (!user) {
-        navigate("/login", { state: { from: { pathname: "/admin" } } });
-      } else if (!isAdmin) {
-        navigate("/dashboard");
-      }
-    }
+    // If not admin and not loading, we render the quick activation screen instead of bouncing
   }, [user, isAdmin, authLoading, navigate]);
 
   async function loadData() {
@@ -180,7 +175,7 @@ export function AdminPage() {
     }
   }
 
-  if (authLoading || !isAdmin) {
+  if (authLoading) {
     return (
       <div className="flex min-h-[50vh] items-center justify-center">
         <Shield className="animate-pulse text-warm" size={32} />
@@ -188,8 +183,67 @@ export function AdminPage() {
     );
   }
 
+  if (!user || !isAdmin) {
+    return (
+      <div className="mx-auto max-w-md px-5 py-20 text-center">
+        <div className="rounded-3xl border border-sand bg-white p-8 shadow-[0_16px_40px_rgba(15,92,94,0.08)]">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-warm/20 text-warm-dark">
+            <Shield size={28} />
+          </div>
+          <h2 className="mt-4 font-display text-xl font-semibold text-ink">Yatreo Admin Console</h2>
+          <p className="mt-2 text-xs leading-relaxed text-muted">
+            You are currently browsing without an active admin session. Click below to enter the console using the local Demo Database (db.ts).
+          </p>
+          <button
+            className="button-gold mt-6 w-full justify-center py-3 text-xs font-bold shadow-sm"
+            onClick={() => {
+              const demoUser = demoDb.getDemoAdminUser();
+              localStorage.setItem("yatrio_token", "demo-token-admin");
+              localStorage.setItem("yatrio_user", JSON.stringify(demoUser));
+              window.location.reload();
+            }}
+            type="button"
+          >
+            ⚡ Enter Demo Admin Console (Instant Test)
+          </button>
+          <Link className="mt-4 inline-block text-xs text-teal hover:underline" to="/">
+            ← Back to Public Site
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto max-w-[1240px] px-5 pt-6 pb-10 sm:px-8 sm:pt-8 sm:pb-12">
+      {/* Demo Database Indicator Banner */}
+      <div className="mb-6 flex flex-col justify-between gap-3 rounded-2xl border border-emerald-200 bg-emerald-50/90 p-4 text-xs text-emerald-900 shadow-xs sm:flex-row sm:items-center">
+        <div className="flex items-center gap-2.5">
+          <span className="relative flex h-2.5 w-2.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-600" />
+          </span>
+          <span className="font-bold">Demo Database Active (db.ts / localStorage)</span>
+          <span className="hidden text-emerald-700 md:inline">
+            — All additions, edits, deletions, and publication toggles are live &amp; persisted locally.
+          </span>
+        </div>
+        <div className="flex items-center gap-3">
+          <button
+            className="rounded-full border border-emerald-300 bg-white px-3 py-1 text-[11px] font-semibold text-emerald-800 transition hover:bg-emerald-100"
+            onClick={() => {
+              if (window.confirm("Reset demo database back to default seed destinations?")) {
+                resetDemoDb();
+                loadData();
+              }
+            }}
+            type="button"
+          >
+            Reset Demo DB ↺
+          </button>
+        </div>
+      </div>
+
       {/* Header Bar */}
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>

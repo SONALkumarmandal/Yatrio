@@ -12,17 +12,17 @@ export function OffersBand() {
         <div className="offers-card">
           <span aria-hidden="true" className="offers-sun" />
           <div className="relative">
-            <span className="offers-kicker">For the next chapter</span>
+            <span className="offers-kicker">Tailor-made seasonal perks</span>
             <h2>Early Bird Holiday Savings</h2>
-            <p>Save up to 15% on winter getaways across Kerala, Rajasthan, and Andaman when booking 30 days ahead.</p>
+            <p>Save up to 15% on tailor-made packages across Kerala, Rajasthan, and Andaman when booking 30 days ahead.</p>
           </div>
           <a
             className="button-gold min-h-12 gap-2 px-6"
-            href={whatsappUrl("Hi Yatrio, tell me about your seasonal holiday offers.")}
+            href={whatsappUrl("Hi Yatreo, tell me about your tailor-made packages and seasonal offers.")}
             rel="noreferrer"
             target="_blank"
           >
-            <MessageCircle size={16} /> Ask us on WhatsApp
+            <MessageCircle size={16} /> Get Tailor-Made Offer
           </a>
         </div>
       </div>

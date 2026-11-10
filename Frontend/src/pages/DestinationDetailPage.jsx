@@ -264,25 +264,86 @@ export function DestinationDetailPage() {
         </div>
       </section>
 
+      {/* Suggested Gen-Z Package Timeline */}
+      <section className="mx-auto max-w-[1240px] px-5 py-12 sm:px-8">
+        <div className="rounded-3xl border border-sand bg-white p-6 sm:p-10 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-teal/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-teal">
+                <Sparkles className="text-gold" size={13} /> Suggested Package Flow · The Vibe Timeline
+              </span>
+              <h2 className="mt-3 font-display text-2xl font-semibold text-ink sm:text-3xl">
+                How your days flow in {destination.name}.
+              </h2>
+              <p className="mt-1 text-xs sm:text-sm text-muted max-w-xl">
+                Crafted for golden hours, main-character views, and zero stress. 100% tailor-made packages can be customized around your dates!
+              </p>
+            </div>
+            <a
+              className="button-gold self-start sm:self-auto gap-2 px-5 py-2.5 text-xs font-semibold whitespace-nowrap shadow-sm"
+              href={whatsappUrl(`Hi Yatreo! I love the suggested timeline for ${destination.name}. Could we design a tailor-made package around it?`)}
+              rel="noreferrer"
+              target="_blank"
+            >
+              <MessageCircle size={15} /> Customize This Timeline
+            </a>
+          </div>
+
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="rounded-2xl border border-sand/60 bg-cream/30 p-4 transition hover:border-teal/30 hover:bg-white hover:shadow-xs">
+              <span className="rounded bg-teal/10 px-2 py-0.5 font-mono text-[10px] font-bold text-teal">Day 01</span>
+              <h4 className="mt-2 font-display text-sm font-semibold text-ink">Touchdown &amp; Settle In ☕</h4>
+              <p className="mt-1 text-xs leading-relaxed text-muted">
+                Scenic transit from airport / station, local welcome tea, and an unhurried sunset stroll to get in the groove.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-sand/60 bg-cream/30 p-4 transition hover:border-teal/30 hover:bg-white hover:shadow-xs">
+              <span className="rounded bg-teal/10 px-2 py-0.5 font-mono text-[10px] font-bold text-teal">Day 02–03</span>
+              <h4 className="mt-2 font-display text-sm font-semibold text-ink">Main Character Views 📸</h4>
+              <p className="mt-1 text-xs leading-relaxed text-muted">
+                Hidden viewpoints, private boat / cab diversions, and aesthetic local food crawls away from crowded tourist bus spots.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-sand/60 bg-cream/30 p-4 transition hover:border-teal/30 hover:bg-white hover:shadow-xs">
+              <span className="rounded bg-teal/10 px-2 py-0.5 font-mono text-[10px] font-bold text-teal">Day 04</span>
+              <h4 className="mt-2 font-display text-sm font-semibold text-ink">Unplugged Era 🌿</h4>
+              <p className="mt-1 text-xs leading-relaxed text-muted">
+                Zero notifications, mountain chalet / river drift stay, fresh regional feast, and stargazing under quiet skies.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-sand/60 bg-cream/30 p-4 transition hover:border-teal/30 hover:bg-white hover:shadow-xs">
+              <span className="rounded bg-teal/10 px-2 py-0.5 font-mono text-[10px] font-bold text-teal">Final Days</span>
+              <h4 className="mt-2 font-display text-sm font-semibold text-ink">Core Memories &amp; Fly Home ✈️</h4>
+              <p className="mt-1 text-xs leading-relaxed text-muted">
+                Artisan souvenir shopping, last golden hour brunch, and heading home with a camera roll full of unforgettable memories.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Bottom CTA */}
       <section className="mx-auto max-w-[1240px] px-5 py-12 sm:px-8 sm:py-16">
         <div className="grid items-center gap-6 overflow-hidden rounded-[26px] bg-[#f2ede3] p-6 sm:p-9 lg:grid-cols-[1fr_auto] lg:px-12 lg:py-10">
           <div className="max-w-2xl">
-            <Eyebrow>Your trip, the way you imagined it</Eyebrow>
+            <Eyebrow>100% Tailor-Made Packages</Eyebrow>
             <h2 className="mt-3 font-display text-[1.85rem] font-semibold leading-tight text-teal sm:text-[2.45rem]">
-              Planning {destination.name}? Let’s make it personal.
+              Planning {destination.name}? Let’s build your tailor-made package.
             </h2>
             <p className="mt-3 text-sm leading-7 text-muted">
-              Every detail is shaped around what you like — quiet mornings, bustling markets, or long scenic drives.
+              Yatreo is a part of Rishav Travels (25+ years trusted). Every stay, driver, meal stop, and scenic diversion is shaped into a tailor-made package built around your pace and budget.
             </p>
           </div>
           <a
             className="button-gold gap-2 self-start px-7 py-3.5 lg:self-center"
-            href={whatsappUrl(`Hi Yatreo, let's plan my personalized trip to ${destination.name}.`)}
+            href={whatsappUrl(`Hi Yatreo, I'd like a tailor-made package for my upcoming trip to ${destination.name}.`)}
             rel="noreferrer"
             target="_blank"
           >
-            <MessageCircle size={17} /> Plan with us on WhatsApp
+            <MessageCircle size={17} /> Get My Tailor-Made Package
           </a>
         </div>
       </section>

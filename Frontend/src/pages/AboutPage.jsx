@@ -30,14 +30,19 @@ export function AboutPage() {
         <div className="mt-2.5">
           <Eyebrow>The Yatreo Story</Eyebrow>
         </div>
-        <h1 className="mt-2 font-display text-2xl font-semibold tracking-tight text-ink sm:text-4xl">
+        <div className="mt-2.5 inline-flex items-center gap-2 rounded-full border border-teal/20 bg-teal/5 px-3.5 py-1 text-xs font-semibold text-teal">
+          <Sparkles className="text-gold" size={13} />
+          <span>Yatreo is a part of Rishav Travels · Flying High since 25+ years</span>
+        </div>
+        <h1 className="mt-3 font-display text-2xl font-semibold tracking-tight text-ink sm:text-4xl">
           Born from <span className="text-teal font-serif">yatra</span> &amp;{" "}
           <span className="text-warm-dark font-serif">yatri</span>.
         </h1>
         <p className="mt-2 text-sm leading-relaxed text-muted sm:text-base">
-          We believe holiday planning shouldn’t feel like taking a second job. In a world of copy-paste algorithms and
-          hidden surcharges, Yatreo connects you directly with a well-travelled friend over WhatsApp to plan slow,
-          meaningful getaways.
+          Yatreo is a part of <strong>Rishav Travels</strong>, combining 25+ years of verified on-ground travel expertise
+          with a modern, slow-travel philosophy. We believe holiday planning shouldn’t feel like taking a second job.
+          Instead of cookie-cutter algorithms and hidden fees, Yatreo connects you directly with a well-travelled friend over
+          WhatsApp to design 100% tailor-made packages.
         </p>
       </div>
 
@@ -83,6 +88,10 @@ export function AboutPage() {
                 <span className="font-semibold text-cream">Fraunces · Hind · Yatra One</span>
               </div>
               <div className="flex justify-between border-b border-white/10 pb-2">
+                <span className="text-cream/50 uppercase tracking-wider text-[10px]">Parent Company</span>
+                <span className="font-semibold text-warm">Rishav Travels (25+ years)</span>
+              </div>
+              <div className="flex justify-between border-b border-white/10 pb-2">
                 <span className="text-cream/50 uppercase tracking-wider text-[10px]">Brand Voice</span>
                 <span className="font-semibold text-cream">A well-travelled friend</span>
               </div>
@@ -101,10 +110,10 @@ export function AboutPage() {
           <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-teal/10 text-teal">
             <Heart size={22} />
           </span>
-          <h3 className="mt-4 font-display text-xl font-semibold text-ink">Built around you</h3>
+          <h3 className="mt-4 font-display text-xl font-semibold text-ink">Tailor-made packages</h3>
           <p className="mt-2 text-xs leading-relaxed text-muted">
             We don’t believe in cookie-cutter 4-night packages. Every stay, driver, meal stop, and scenic diversion is
-            tailored to your timing and taste.
+            a 100% tailor-made package adapted to your timing, vibe, and budget.
           </p>
         </div>
 
@@ -133,19 +142,22 @@ export function AboutPage() {
 
       {/* WhatsApp CTA */}
       <div className="mt-14 rounded-3xl border border-sand bg-[#f5ede1] p-8 text-center sm:p-12">
-        <h2 className="font-display text-2xl font-semibold text-ink sm:text-3xl">
-          Want to plan your next chapter with us?
+        <span className="inline-block rounded-full bg-teal/10 px-3 py-1 text-xs font-semibold text-teal uppercase tracking-wider">
+          100% Tailor-Made Packages
+        </span>
+        <h2 className="mt-3 font-display text-2xl font-semibold text-ink sm:text-3xl">
+          Want a tailor-made package designed just for you?
         </h2>
         <p className="mx-auto mt-2 max-w-md text-sm text-muted">
-          Say hi on WhatsApp. Tell us when you have time off and where your heart is leaning.
+          Say hi on WhatsApp. Tell us when you have time off and where your heart is leaning — our team at Yatreo (a part of Rishav Travels) will build your custom itinerary.
         </p>
         <a
           className="button-gold mx-auto mt-6 inline-flex items-center gap-2 px-6 py-3.5 text-xs font-semibold uppercase tracking-wider"
-          href={whatsappUrl("Hi Yatreo! I loved reading your story and would like to plan a trip with you.")}
+          href={whatsappUrl("Hi Yatreo! I loved reading your story and would love to get a tailor-made package designed for our trip.")}
           rel="noreferrer"
           target="_blank"
         >
-          <MessageCircle size={16} /> Say hello on WhatsApp
+          <MessageCircle size={16} /> Plan a tailor-made package on WhatsApp
         </a>
       </div>
     </div>

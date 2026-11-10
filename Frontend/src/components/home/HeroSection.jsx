@@ -35,50 +35,82 @@ function TrustItem({ icon: Icon, title }) {
   );
 }
 
+function FlightPathArc() {
+  return (
+    <div aria-hidden="true" className="hero-flight-arc">
+      <svg
+        className="overflow-visible"
+        height="80"
+        viewBox="0 0 260 80"
+        width="260"
+      >
+        <path
+          d="M 10 65 Q 130 8 242 38"
+          fill="none"
+          stroke="var(--color-teal)"
+          strokeDasharray="5 5"
+          strokeLinecap="round"
+          strokeOpacity="0.45"
+          strokeWidth="1.75"
+        />
+        <g transform="translate(242, 38) rotate(22)">
+          <path
+            d="M0 -6 L11 0 L0 6 L2 1.5 L-6 1.5 L-8 4 L-9 4 L-8 0 L-9 -4 L-8 -4 L-6 -1.5 L2 -1.5 Z"
+            fill="var(--color-teal)"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
 export function HeroSection({ destinations = [] }) {
   return (
     <>
       <section className="hero-section">
         <div className="hero-inner">
           <div aria-hidden="true" className="hero-sun" />
-          <div aria-hidden="true" className="hero-flight-path">
-            <Plane size={17} />
-          </div>
-          <div className="hero-content">
-            <Eyebrow>Holiday packages</Eyebrow>
-            <h1 className="hero-title">
-              Every yatra,
-              <br />
-              <span>your story.</span>
-            </h1>
-            <p className="hero-description">
-              Holidays, handled. Tell us where you want to go, and a real person plans the rest with you on WhatsApp.
-            </p>
+          <FlightPathArc />
 
-            {/* Travel Components Highlight Note */}
-            <div className="mb-4 inline-flex flex-wrap items-center gap-2 rounded-full border border-teal/15 bg-white/85 px-3.5 py-1.5 text-[11px] font-semibold text-ink shadow-xs backdrop-blur-sm">
-              <span className="flex items-center gap-1 text-teal font-medium">
-                <Plane className="text-warm" size={13} /> Flight
-              </span>
-              <span className="text-sand">·</span>
-              <span className="flex items-center gap-1 text-teal font-medium">
-                <Train className="text-warm" size={13} /> Train
-              </span>
-              <span className="text-sand">·</span>
-              <span className="flex items-center gap-1 text-teal font-medium">
-                <Ship className="text-warm" size={13} /> Cruise
-              </span>
-              <span className="text-sand">·</span>
-              <span className="flex items-center gap-1 text-teal font-medium">
-                <Hotel className="text-warm" size={13} /> Hotels
-              </span>
-              <span className="text-sand">·</span>
-              <span className="flex items-center gap-1 text-teal font-medium">
-                <Car className="text-warm" size={13} /> Cabs
-              </span>
+          <div className="hero-content">
+            <div className="flex flex-col items-start gap-2.5">
+              <Eyebrow>Holiday packages</Eyebrow>
+              <h1 className="hero-title">
+                Every yatra,
+                <br />
+                <span>your story.</span>
+              </h1>
+              <p className="hero-description">
+                Holidays, handled. Tell us where you want to go, and a real person plans the rest with you on WhatsApp.
+              </p>
+
+              {/* Travel Components Highlight Note */}
+              <div className="mt-1 inline-flex w-fit flex-wrap items-center gap-2 rounded-full border border-teal/15 bg-white/90 px-3.5 py-1.5 text-[11px] font-semibold text-ink shadow-xs backdrop-blur-sm">
+                <span className="flex items-center gap-1.5 font-medium text-teal">
+                  <Plane className="text-gold" size={13} /> Flight
+                </span>
+                <span className="text-sand">·</span>
+                <span className="flex items-center gap-1.5 font-medium text-teal">
+                  <Train className="text-gold" size={13} /> Train
+                </span>
+                <span className="text-sand">·</span>
+                <span className="flex items-center gap-1.5 font-medium text-teal">
+                  <Ship className="text-gold" size={13} /> Cruise
+                </span>
+                <span className="text-sand">·</span>
+                <span className="flex items-center gap-1.5 font-medium text-teal">
+                  <Hotel className="text-gold" size={13} /> Hotels
+                </span>
+                <span className="text-sand">·</span>
+                <span className="flex items-center gap-1.5 font-medium text-teal">
+                  <Car className="text-gold" size={13} /> Cabs
+                </span>
+              </div>
             </div>
 
-            <TripPlanner destinations={destinations} />
+            <div className="mt-4">
+              <TripPlanner destinations={destinations} />
+            </div>
           </div>
           <div className="hero-visual">
             <img

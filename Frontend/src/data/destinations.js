@@ -152,6 +152,74 @@ export const destinations = [
     bestFor: "A change of scenery",
     rating: "4.9",
   },
+  {
+    slug: "thailand",
+    name: "Thailand",
+    state: "Islands & Neon Skies",
+    region: "Beyond",
+    label: "Island & City Vibe",
+    image:
+      "https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?auto=format&fit=crop&w=1400&q=85",
+    price: "Custom quote",
+    duration: "5 nights / 6 days",
+    season: "November – April",
+    description:
+      "From midnight pad thai in bustling Bangkok lanes to turquoise lagoon speedboats in Phi Phi, Thailand is pure electric energy.",
+    highlights: ["Phi Phi speedboats", "Bangkok rooftop bars", "Phuket beach resort"],
+    bestFor: "Friends & couples",
+    rating: "4.9",
+  },
+  {
+    slug: "vietnam",
+    name: "Vietnam",
+    state: "Lanterns & Emerald Bays",
+    region: "Beyond",
+    label: "Aesthetic Era",
+    image:
+      "https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=1400&q=85",
+    price: "Custom quote",
+    duration: "6 nights / 7 days",
+    season: "September – April",
+    description:
+      "Sip egg coffee beside railway tracks in Hanoi, drift through misty limestone pillars in Ha Long Bay, and release paper lanterns in Hoi An.",
+    highlights: ["Ha Long Bay cruise", "Hanoi train street", "Hoi An lantern boat"],
+    bestFor: "Culture & aesthetics",
+    rating: "4.9",
+  },
+  {
+    slug: "sri-lanka",
+    name: "Sri Lanka",
+    state: "Tea Hills & Indian Ocean",
+    region: "Beyond",
+    label: "Island Slowdown",
+    image:
+      "https://images.unsplash.com/photo-1546708973-b339540b5162?auto=format&fit=crop&w=1400&q=85",
+    price: "Custom quote",
+    duration: "5 nights / 6 days",
+    season: "October – April",
+    description:
+      "Lean out of the famous blue train rattling through misty tea gardens, watch orange sunsets over Mirissa palms, and stroll Dutch ramparts.",
+    highlights: ["Nine Arch blue train", "Mirissa secret beach", "Galle Fort heritage"],
+    bestFor: "Slow travel & scenic trails",
+    rating: "4.9",
+  },
+  {
+    slug: "srinagar",
+    name: "Srinagar",
+    state: "Heaven on Earth",
+    region: "North",
+    label: "Lakes & Snow",
+    image:
+      "https://images.unsplash.com/photo-1595815771614-ade9d652a65d?auto=format&fit=crop&w=1400&q=85",
+    price: "Custom quote",
+    duration: "5 nights / 6 days",
+    season: "Year Round",
+    description:
+      "Glide across serene Dal Lake in a wooden shikara, sip steaming saffron kahwa on your carved houseboat balcony, and touch snow at Gulmarg peaks.",
+    highlights: ["Dal Lake houseboat", "Gulmarg gondola snowline", "Sunrise floating flower market"],
+    bestFor: "Couples & nature lovers",
+    rating: "4.9",
+  },
 ];
 
 export const regions = ["All regions", "North", "South", "West", "East", "Islands", "Beyond"];

@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import { useWishlist } from "../../context/WishlistContext";
 
 export function ImageCard({ destination, className = "" }) {
-  const { slug, name, state, image, price, duration, label, rating } = destination;
+  const { slug, name, state, image, price, duration, label, rating, highlights } = destination;
   const { isSaved, toggleWishlist } = useWishlist();
   const saved = isSaved(slug);
+  const isFeatured = className.includes("destination-tile-featured");
 
   return (
     <article
@@ -13,7 +14,9 @@ export function ImageCard({ destination, className = "" }) {
     >
       <Link
         aria-label={`View journey: ${name}, ${state}`}
-        className="relative aspect-[4/3] w-full overflow-hidden bg-sand/30"
+        className={`relative w-full overflow-hidden bg-sand/30 ${
+          isFeatured ? "flex-1 min-h-[360px]" : "aspect-[4/3]"
+        }`}
         to={`/destinations/${slug}`}
       >
         <img
@@ -22,17 +25,39 @@ export function ImageCard({ destination, className = "" }) {
           loading="lazy"
           src={image}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/20 to-black/25" />
 
-        {label && (
-          <span className="absolute left-3.5 top-3.5 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold tracking-wide text-teal shadow-sm backdrop-blur-md">
-            {label}
-          </span>
-        )}
+        {/* Badges */}
+        <div className="absolute left-3.5 top-3.5 flex flex-wrap items-center gap-1.5">
+          {label && (
+            <span className="rounded-full bg-white/95 px-3 py-1 text-xs font-semibold tracking-wide text-teal shadow-sm backdrop-blur-md">
+              {label}
+            </span>
+          )}
+          {isFeatured && (
+            <span className="rounded-full bg-gold px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-deep shadow-sm">
+              Featured Yatra
+            </span>
+          )}
+        </div>
 
         <div className="absolute bottom-3.5 left-3.5 right-3.5">
           <p className="text-xs font-semibold uppercase tracking-wider text-warm">{state}</p>
           <h3 className="font-serif text-2xl font-normal text-cream">{name}</h3>
+
+          {/* Highlights for featured card */}
+          {isFeatured && highlights && highlights.length > 0 && (
+            <div className="mt-2.5 flex flex-wrap gap-1.5">
+              {highlights.slice(0, 3).map((h) => (
+                <span
+                  key={h}
+                  className="rounded-full border border-white/20 bg-white/15 px-2.5 py-0.5 text-[11px] font-medium text-cream backdrop-blur-md"
+                >
+                  {h}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       </Link>
 
@@ -55,7 +80,7 @@ export function ImageCard({ destination, className = "" }) {
         <Heart className={saved ? "fill-rose-500 text-rose-500" : "text-white"} size={16} />
       </button>
 
-      <div className="flex flex-1 items-center justify-between border-t border-sand/40 p-4">
+      <div className="flex shrink-0 items-center justify-between border-t border-sand/40 bg-white p-4">
         <div>
           <span className="text-[10px] font-semibold uppercase tracking-wider text-muted">Starting at</span>
           <p className="font-serif text-lg font-semibold text-ink">{price}</p>

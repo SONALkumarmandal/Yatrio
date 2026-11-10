@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ArrowRight, CheckCircle2, KeyRound, Lock, Mail, ShieldCheck, User } from "lucide-react";
+import { ArrowRight, CheckCircle2, KeyRound, Lock, Mail, Shield, ShieldCheck, User } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { Logo, YatreoMark } from "../components/layout/Logo";
 
@@ -39,6 +39,19 @@ export function LoginPage() {
       navigate(from, { replace: true });
     } catch (err) {
       setError(err.message || "Authentication failed. Please check your details.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function quickLoginAdmin() {
+    setLoading(true);
+    setError("");
+    try {
+      await login("admin@yatrio.com", "Admin12345!");
+      navigate("/admin", { replace: true });
+    } catch (err) {
+      setError("Demo admin login failed: " + err.message);
     } finally {
       setLoading(false);
     }
@@ -160,20 +173,37 @@ export function LoginPage() {
           </button>
         </div>
 
-        {/* Quick Demo Helper */}
-        <div className="mt-5 rounded-2xl border border-sand/70 bg-[#faf6f0] p-4 text-xs text-muted">
+        {/* Quick Demo Database Admin Testing Box */}
+        <div className="mt-5 rounded-2xl border border-teal/20 bg-teal/5 p-4 text-xs text-ink">
           <div className="flex items-center justify-between">
-            <span className="font-semibold text-ink">Demo Admin Login</span>
+            <span className="font-bold text-teal flex items-center gap-1.5">
+              <Shield size={14} className="text-warm" /> Demo Database (db.ts)
+            </span>
+            <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">
+              Active
+            </span>
+          </div>
+          <p className="mt-1 text-[11px] leading-relaxed text-muted">
+            Test the Admin Console manually without running a backend server. Uses persistent local demoDb (localStorage).
+          </p>
+          <div className="mt-3 flex items-center gap-2">
             <button
-              className="rounded-full bg-warm/20 px-2.5 py-1 text-[11px] font-semibold text-warm-dark hover:bg-warm/30"
+              className="button-gold flex-1 py-2 text-center text-xs font-bold justify-center"
+              onClick={quickLoginAdmin}
+              type="button"
+            >
+              ⚡ Enter Demo Admin Console
+            </button>
+            <button
+              className="rounded-full border border-sand bg-white px-3 py-2 text-[11px] font-semibold text-muted hover:border-teal hover:text-ink"
               onClick={fillAdminCredentials}
               type="button"
             >
-              Fill Credentials
+              Fill Form
             </button>
           </div>
-          <p className="mt-1 text-[11px] leading-relaxed">
-            Admin account seeded by backend: <code className="text-teal font-mono">admin@yatrio.com</code> / <code className="text-teal font-mono">Admin12345!</code>
+          <p className="mt-2 text-[10px] text-muted">
+            Demo Credentials: <code className="text-teal font-mono">admin@yatrio.com</code> / <code className="text-teal font-mono">Admin12345!</code>
           </p>
         </div>
       </div>

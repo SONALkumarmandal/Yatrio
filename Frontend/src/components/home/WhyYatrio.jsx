@@ -6,18 +6,21 @@ export function WhyYatrio() {
   const reasons = [
     {
       icon: Heart,
-      title: "Made around you",
-      text: "Your pace, your people, your kind of trip. Never a cookie-cutter itinerary.",
+      priority: "#1",
+      title: "Real Human, No Bots",
+      text: "A real, well-travelled human planner on WhatsApp who listens and replies in ~4 mins.",
     },
     {
       icon: Leaf,
-      title: "Locally considered",
-      text: "The lovely small boutique stays, responsible guides, and quieter routes matter to us.",
+      priority: "#2",
+      title: "100% Tailor-Made",
+      text: "Curated for your vibe, private cab, and handpicked stays. Never forced onto group buses.",
     },
     {
       icon: ShieldCheck,
-      title: "There when it counts",
-      text: "A friendly dedicated human to help before your trip, during your journey, and until you are home.",
+      priority: "#3",
+      title: "Zero Hidden Fees",
+      text: "Clear honest pricing upfront. What we quote on WhatsApp is what you pay. Not a rupee extra.",
     },
   ];
 
@@ -25,12 +28,12 @@ export function WhyYatrio() {
     <section className="section-shell pt-2" id="about">
       <div className="why-panel">
         <div className="max-w-[510px]">
-          <Eyebrow light>The good kind of different</Eyebrow>
+          <Eyebrow light>The Yatreo Standard</Eyebrow>
           <h2 className="mt-3 font-display text-[2rem] font-semibold leading-tight text-white sm:text-[2.7rem]">
-            Good travel feels like it was meant for you.
+            Simple promises. High standards. Zero drama.
           </h2>
           <p className="mt-4 max-w-md text-sm leading-7 text-white/70 sm:text-base">
-            No fuss, no surprises. Just people who care about where you go — and how you feel when you get there.
+            Backed by 25+ years of Rishav Travels. No fuss, no hidden surcharges — just genuine care for how you travel.
           </p>
           <a
             className="mt-7 inline-flex items-center gap-2 rounded-full bg-gold px-5 py-3 text-sm font-semibold text-deep transition hover:bg-[#ffd07e]"
@@ -38,14 +41,14 @@ export function WhyYatrio() {
             rel="noreferrer"
             target="_blank"
           >
-            Come say hello <ArrowRight size={16} />
+            Scene Banao WhatsApp Pe <ArrowRight size={16} />
           </a>
         </div>
         <div className="mt-10 grid gap-6 sm:grid-cols-3 lg:mt-0 lg:max-w-[560px]">
-          {reasons.map(({ icon: Icon, title, text }) => (
+          {reasons.map(({ icon: Icon, priority, title, text }) => (
             <div className="flex gap-3 sm:flex-col" key={title}>
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-gold">
-                <Icon size={19} />
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-gold font-mono text-xs font-bold">
+                {priority}
               </span>
               <div>
                 <h3 className="font-semibold text-white">{title}</h3>
