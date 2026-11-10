@@ -63,9 +63,16 @@ def list_destinations(
 def create_destination(
     request: Request,
     title: str = Form(..., min_length=1, max_length=200),
+    slug: str | None = Form(None),
     description: str | None = Form(None),
     country: str | None = Form(None),
     city: str | None = Form(None),
+    state: str | None = Form(None),
+    region: str | None = Form(None),
+    label: str | None = Form(None),
+    season: str | None = Form(None),
+    best_for: str | None = Form(None),
+    rating: str | None = Form("4.9"),
     price: Decimal | None = Form(None, ge=0),
     duration_days: int | None = Form(None, ge=1),
     is_published: bool = Form(True),
@@ -73,9 +80,12 @@ def create_destination(
     admin: User = Depends(require_admin),
     db: Session = Depends(get_db),
 ):
+    auto_slug = (slug or title.lower().replace(" ", "-")).strip()
     dest = Destination(
-        title=title, description=description, country=country, city=city, price=price,
-        duration_days=duration_days, is_published=is_published, created_by=admin.id,
+        title=title, slug=auto_slug, description=description, country=country, city=city,
+        state=state, region=region, label=label, season=season, best_for=best_for,
+        rating=rating or "4.9", price=price, duration_days=duration_days,
+        is_published=is_published, created_by=admin.id,
         media=_upload_all(media),
     )
     db.add(dest)
@@ -95,9 +105,16 @@ def update_destination(
     id: int,
     request: Request,
     title: str | None = Form(None, min_length=1, max_length=200),
+    slug: str | None = Form(None),
     description: str | None = Form(None),
     country: str | None = Form(None),
     city: str | None = Form(None),
+    state: str | None = Form(None),
+    region: str | None = Form(None),
+    label: str | None = Form(None),
+    season: str | None = Form(None),
+    best_for: str | None = Form(None),
+    rating: str | None = Form(None),
     price: Decimal | None = Form(None, ge=0),
     duration_days: int | None = Form(None, ge=1),
     is_published: bool | None = Form(None),
@@ -108,7 +125,9 @@ def update_destination(
 ):
     dest = _get(db, id)
     for field, value in {
-        "title": title, "description": description, "country": country, "city": city,
+        "title": title, "slug": slug, "description": description, "country": country,
+        "city": city, "state": state, "region": region, "label": label,
+        "season": season, "best_for": best_for, "rating": rating,
         "price": price, "duration_days": duration_days, "is_published": is_published,
     }.items():
         if value is not None:

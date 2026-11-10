@@ -91,12 +91,20 @@ class Destination(Base):
     __tablename__ = "destinations"
 
     id: Mapped[int] = mapped_column(primary_key=True)
+    slug: Mapped[str | None] = mapped_column(String(100), unique=True, index=True, nullable=True)
     title: Mapped[str] = mapped_column(String(200), index=True)
     description: Mapped[str | None] = mapped_column(Text)
     country: Mapped[str | None] = mapped_column(String(100), index=True)
     city: Mapped[str | None] = mapped_column(String(100))
+    state: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    region: Mapped[str | None] = mapped_column(String(50), index=True, nullable=True)
+    label: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    season: Mapped[str | None] = mapped_column(String(100), nullable=True)
     price: Mapped[Decimal | None] = mapped_column(Numeric(10, 2))
     duration_days: Mapped[int | None] = mapped_column(Integer)
+    highlights: Mapped[list | None] = mapped_column(JsonType, default=list)
+    best_for: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    rating: Mapped[str | None] = mapped_column(String(10), default="4.9")
     is_published: Mapped[bool] = mapped_column(Boolean, default=True)
     # list of {url, public_id, resource_type, format, bytes}
     media: Mapped[list] = mapped_column(JsonType, default=list)

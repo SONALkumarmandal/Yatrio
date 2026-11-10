@@ -41,7 +41,12 @@ def get_current_user(
     session = db.scalar(
         select(UserSession).where(UserSession.jti == jti, UserSession.user_id == user_id)
     )
-    if not session or session.revoked or session.expires_at < datetime.now(timezone.utc):
+    if not session or session.revoked:
+        raise _unauthorized("Session expired or revoked")
+    expires_at = session.expires_at
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+    if expires_at < datetime.now(timezone.utc):
         raise _unauthorized("Session expired or revoked")
 
     user = db.get(User, user_id)

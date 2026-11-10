@@ -13,13 +13,16 @@ def _normalize(url: str) -> str:
     return url
 
 
-# pool_pre_ping + pool_recycle: Neon suspends idle compute and drops idle connections
+is_sqlite = "sqlite" in settings.DATABASE_URL
+connect_args = {"check_same_thread": False} if is_sqlite else {}
+pool_kwargs = {"pool_pre_ping": True}
+if not is_sqlite:
+    pool_kwargs.update({"pool_recycle": 300, "pool_size": 5, "max_overflow": 10})
+
 engine = create_engine(
     _normalize(settings.DATABASE_URL),
-    pool_pre_ping=True,
-    pool_recycle=300,
-    pool_size=5,
-    max_overflow=10,
+    connect_args=connect_args,
+    **pool_kwargs,
 )
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 

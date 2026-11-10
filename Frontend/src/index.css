@@ -1,18 +1,75 @@
 @import "tailwindcss";
 
 @theme {
-  --color-cream: #f7f0e4;
+  --color-cream: #faf6f0;
   --color-teal: #0f5c5e;
+  --color-teal-hover: #0a4446;
   --color-lagoon: #5db7ae;
   --color-deep: #112a2d;
   --color-ink: #112a2d;
   --color-muted: #3e5558;
-  --color-sand: #e6dbc6;
+  --color-sand: #eae1d3;
   --color-gold: #f4a93b;
+  --color-warm: #f4a93b;
+  --color-warm-dark: #c67d1e;
   --font-display: "Fraunces", Georgia, serif;
   --font-body: "Hind", "Segoe UI", sans-serif;
   --font-accent: "Yatra One", serif;
   --font-wordmark: "Bricolage Grotesque", sans-serif;
+}
+
+/* Lenis smooth scrolling compatibility */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* Custom Animated Aeroplane Cursor */
+@media (hover: hover) and (pointer: fine) {
+  html.plane-cursor-enabled,
+  html.plane-cursor-enabled body,
+  html.plane-cursor-enabled a,
+  html.plane-cursor-enabled button,
+  html.plane-cursor-enabled [role="button"],
+  html.plane-cursor-enabled label,
+  html.plane-cursor-enabled select {
+    cursor: none !important;
+  }
+
+  /* Keep native I-beam cursor inside text inputs and search bars for easy selection */
+  html.plane-cursor-enabled input[type="text"],
+  html.plane-cursor-enabled input[type="search"],
+  html.plane-cursor-enabled input[type="email"],
+  html.plane-cursor-enabled input[type="password"],
+  html.plane-cursor-enabled textarea {
+    cursor: text !important;
+  }
+}
+
+/* Default Site Zoom (115% — 10% less than 125%) */
+html {
+  zoom: 1.15;
+}
+
+@media (max-width: 480px) {
+  html {
+    zoom: 1;
+  }
 }
 
 :root {
@@ -73,9 +130,9 @@ input:focus-visible {
 
 .nav-link {
   position: relative;
-  padding-block: 10px;
+  padding-block: 6px;
   color: var(--color-muted);
-  font-size: 0.91rem;
+  font-size: 0.88rem;
   font-weight: 500;
   transition: color 160ms ease;
 }
@@ -590,12 +647,12 @@ footer > div > div:first-child p {
 }
 
 .search-bar-light {
-  min-height: 56px;
+  min-height: 48px;
   border: 1px solid #e8dfd1;
-  border-radius: 14px;
+  border-radius: 12px;
   background: #fffdf9;
-  padding-left: 15px;
-  box-shadow: 0 4px 16px rgb(17 42 45 / 3%);
+  padding: 4px 14px;
+  box-shadow: 0 2px 10px rgb(17 42 45 / 3%);
 }
 
 .filter-chip {
@@ -813,36 +870,42 @@ footer > div > div:first-child p {
 }
 
 .hero-section {
-  min-height: 650px;
+  position: relative;
+  min-height: auto;
   background: var(--color-cream);
+  overflow: hidden;
 }
 
 .hero-inner {
   position: relative;
   z-index: 1;
   display: grid;
-  width: min(1200px, 100%);
-  min-height: 620px;
-  grid-template-columns: 1.12fr 0.88fr;
-  align-items: center;
-  gap: 48px;
+  width: min(1240px, 100%);
+  min-height: auto;
+  grid-template-columns: 1.15fr 0.85fr;
+  align-items: stretch;
+  gap: 36px;
   margin: 0 auto;
-  padding: 48px 32px 88px;
+  padding: 124px 28px 36px;
 }
 
 .hero-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   width: auto;
   margin: 0;
-  padding: 20px 0 0;
+  padding: 0;
 }
 
 .hero-title {
   position: relative;
-  margin: 19px 0 0;
+  margin: 8px 0 0;
   color: var(--color-teal);
-  font-size: clamp(3.55rem, 5.2vw, 4.25rem);
-  letter-spacing: -0.055em;
-  line-height: 1.04;
+  font-size: clamp(2.75rem, 4.2vw, 3.5rem);
+  letter-spacing: -0.045em;
+  line-height: 1.05;
 }
 
 .hero-title span {
@@ -851,66 +914,78 @@ footer > div > div:first-child p {
 
 .hero-description {
   max-width: 480px;
-  margin: 16px 0 23px;
+  margin: 8px 0 12px;
   color: var(--color-muted);
-  font-size: 1.06rem;
-  line-height: 1.65;
+  font-size: 0.95rem;
+  line-height: 1.55;
 }
 
 .hero-sun {
   position: absolute;
-  top: 52px;
-  left: max(calc((100vw - 1200px) / 2 + 120px), 10%);
-  width: 310px;
-  height: 310px;
+  top: 75px;
+  left: 18%;
+  width: 320px;
+  height: 320px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgb(244 169 59 / 42%) 0%, rgb(244 169 59 / 17%) 54%, transparent 72%);
+  background: radial-gradient(circle, rgb(244 169 59 / 35%) 0%, rgb(244 169 59 / 12%) 52%, transparent 72%);
   pointer-events: none;
+  filter: blur(8px);
 }
 
 .hero-flight-path {
   position: absolute;
-  top: 76px;
-  left: 44%;
-  z-index: 1;
+  top: 105px;
+  left: 48%;
+  z-index: 2;
   display: flex;
-  width: 115px;
-  height: 40px;
+  width: 105px;
+  height: 36px;
   align-items: flex-start;
-  border-top: 1.5px dashed rgb(15 92 94 / 55%);
+  border-top: 1.5px dashed rgb(15 92 94 / 45%);
   border-radius: 50%;
   color: var(--color-teal);
-  transform: rotate(-12deg);
+  transform: rotate(-10deg);
 }
 
 .hero-flight-path svg {
-  margin: -10px 0 0 72px;
+  margin: -10px 0 0 68px;
   transform: rotate(38deg);
 }
 
 .hero-visual {
   position: relative;
-  min-height: 430px;
+  display: flex;
+  min-height: 410px;
+  height: 100%;
   overflow: visible;
-  border: 8px solid white;
-  border-radius: 28px;
+  border: 6px solid white;
+  border-radius: 26px;
   background: #d3ddd3;
-  box-shadow: 0 18px 48px rgb(17 42 45 / 13%);
+  box-shadow: 0 14px 40px rgb(17 42 45 / 11%);
 }
 
 .hero-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   object-position: center;
   border-radius: 20px;
 }
 
 .hero-caption {
-  right: 15px;
+  position: absolute;
+  right: 14px;
   bottom: 14px;
+  z-index: 2;
   margin: 0;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  background: rgb(17 42 45 / 65%);
+  backdrop-filter: blur(8px);
   color: white;
-  font-size: 0.77rem;
+  font-size: 0.72rem;
   font-weight: 500;
-  text-shadow: 0 1px 5px rgb(17 42 45 / 70%);
+  text-shadow: 0 1px 3px rgb(0 0 0 / 40%);
 }
 
 .hero-caption span {
@@ -919,11 +994,12 @@ footer > div > div:first-child p {
 
 .hero-stamp {
   position: absolute;
-  top: 22px;
-  right: -25px;
+  top: -14px;
+  right: -14px;
+  z-index: 3;
   display: flex;
-  width: 122px;
-  height: 122px;
+  width: 110px;
+  height: 110px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -931,13 +1007,13 @@ footer > div > div:first-child p {
   border-radius: 50%;
   background: var(--color-gold);
   color: var(--color-deep);
-  font-size: 0.64rem;
+  font-size: 0.6rem;
   font-weight: 700;
-  line-height: 1.4;
+  line-height: 1.35;
   text-align: center;
   text-transform: uppercase;
-  transform: rotate(9deg);
-  box-shadow: 0 7px 17px rgb(17 42 45 / 13%);
+  transform: rotate(8deg);
+  box-shadow: 0 8px 22px rgb(17 42 45 / 16%);
 }
 
 .hero-stamp span:last-child {
@@ -1573,17 +1649,16 @@ footer > div {
 @media (max-width: 1023px) {
   .hero-inner {
     grid-template-columns: 1fr 0.8fr;
-    gap: 28px;
-    padding-right: 24px;
-    padding-left: 24px;
+    gap: 24px;
+    padding: 86px 20px 36px;
   }
 
   .hero-title {
-    font-size: clamp(3.1rem, 6vw, 4rem);
+    font-size: clamp(2.4rem, 5vw, 3.2rem);
   }
 
   .hero-visual {
-    min-height: 390px;
+    min-height: 330px;
   }
 
   .destination-stamp-grid {
@@ -1604,8 +1679,8 @@ footer > div {
   .hero-inner {
     min-height: 0;
     grid-template-columns: 1fr;
-    gap: 26px;
-    padding: 42px 20px 108px;
+    gap: 22px;
+    padding: 24px 16px 76px;
   }
 
   .hero-content {

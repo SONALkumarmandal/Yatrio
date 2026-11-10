@@ -1,47 +1,85 @@
-# Yatrio
+# Yatreo
 
 <p align="center">
   <img src="https://img.shields.io/badge/React-18.3.1-61DAFB?style=for-the-badge&logo=react" alt="React" />
   <img src="https://img.shields.io/badge/FastAPI-0.115-009688?style=for-the-badge&logo=fastapi" alt="FastAPI" />
   <img src="https://img.shields.io/badge/Python-3.x-3776AB?style=for-the-badge&logo=python" alt="Python" />
+  <img src="https://img.shields.io/badge/Lenis-Smooth_Scroll-F4A93B?style=for-the-badge" alt="Lenis" />
   <img src="https://img.shields.io/badge/PostgreSQL-Neon-4169E1?style=for-the-badge&logo=postgresql" alt="Neon Postgres" />
 </p>
 
 <p align="center">
-  <strong>Thoughtfully planned holidays across India and beyond.</strong>
+  <strong>Every yatra, your story. Holidays, handled.</strong>
   <br />
-  A travel platform that helps travelers discover destinations, compare trip ideas, and connect with a human planner through WhatsApp.
+  <em>From yatra (journey) + yatri (traveller)</em>
+  <br />
+  A modern travel brand experience combining Human-Centered UI (HCUI), silky Lenis smooth scrolling, bespoke trip blueprints, and a direct WhatsApp human concierge.
 </p>
 
 <div align="center">
   <a href="#features">Features</a> •
+  <a href="#brand-identity">Brand Identity</a> •
+  <a href="#routes">Routes</a> •
   <a href="#architecture">Architecture</a> •
-  <a href="#getting-started">Getting Started</a> •
-  <a href="#project-structure">Project Structure</a> •
-  <a href="#license">License</a>
+  <a href="#getting-started">Getting Started</a>
 </div>
 
 ---
 
-## Overview
+## Brand Identity & Design System
 
-Yatrio is a modern travel brand experience built around personalized holiday planning. The project combines a sleek frontend with a robust backend API to power destination discovery, curated packages, and trip planning workflows.
-
-Whether a traveler wants a slow-backwater escape, an adventure trip, or a heritage getaway, Yatrio helps them explore inspiring destinations and connect with a real planner for a tailored experience.
+Confirmed per Brand Board v1.0:
+- **Name**: `Yatreo` (yatra + yatri)
+- **Tagline**: `Every yatra, your story.`
+- **Support Line**: `Holidays, handled.`
+- **Logo Mark**: The Fork, with an ascending golden airplane and runway centerlines
+- **Palette**: Palette A · *Sunrise Over Water*
+  - Deep Sea Teal: `#0F5C5E`
+  - Night Ink: `#112A2D`
+  - Sun Amber/Gold: `#F4A93B`
+  - Oat & Sand: `#EAE1D3`
+  - Warm Ivory Cream: `#FAF6F0`
+- **Typography**:
+  - `Fraunces` — Warm editorial display serif
+  - `Hind` — High-legibility humanist body & UI sans
+  - `Yatra One` — Indian accent / Devanagari heritage stamps
+- **Booking Flow**: Directly on WhatsApp with a dedicated human planner (no mandatory logins).
 
 ---
 
 ## Features
 
-- Beautiful destination discovery pages and curated travel packages
-- Responsive travel website built with React + Vite
-- Personalized trip planner flow via WhatsApp integration
-- Search and filter for destinations by region and budget
-- FastAPI backend with authentication, media uploads, and admin management
-- PostgreSQL database with Neon integration
-- JWT + session-based security for protected routes
-- Cloudinary support for image storage and uploads
-- Swagger / OpenAPI docs for quick API exploration
+- **HCUI & Gen-Z Centric Polish**:
+  - Silky Lenis smooth scrolling with motion accessibility detection.
+  - Interactive **15-second Vibe Matcher** quiz on the homepage.
+  - Interactive **Custom Trip Builder** (`/plan`) with live budget slider, per-day estimates, traveler steppers, and instant WhatsApp itinerary blueprint export.
+  - **Trip Wishlist / Bookmark Store** (single-tap heart toggle with offline persistence).
+  - Floating **Human Concierge Pill** with real-time online status indicator.
+  - Shareable trips with native Web Share API & clipboard toast notifications.
+- **FastAPI REST API**:
+  - Public endpoints: `/api/destinations` (pagination, search, and region filters).
+  - Admin management: `/api/admin/destinations` (CRUD with Cloudinary upload/deletion).
+  - Traveler projects: `/api/projects` (custom trip plans).
+  - Automated SQLite fallback for zero-config local runs, with Neon PostgreSQL production support.
+  - Automated test suite verified with Pytest.
+
+---
+
+## Routes
+
+| Route | Page | Description |
+|---|---|---|
+| `/` | **Home Page** | Hero, search, vibe matcher, stamps grid, testimonials |
+| `/destinations` | **Explore Page** | Filter by region, budget, search with live API sync |
+| `/destinations/:slug` | **Destination Detail** | Hero visuals, season, highlights, inclusions, WhatsApp CTA |
+| `/packages` | **Curated Packages** | Boarding pass cards with transparent routes & all-in pricing |
+| `/plan` | **Trip Planner** | Bespoke trip blueprint builder with budget slider |
+| `/about` | **Our Story** | Brand philosophy, yatra + yatri origin, confirmed design board |
+| `/faq` | **FAQs** | Interactive accordion answering booking, safety & payments |
+| `/contact` | **Contact Concierge** | Human concierge, hours, quick WhatsApp note generator |
+| `/dashboard` | **Traveler Dashboard**| Profile view, saved wishlist, personal trip plans |
+| `/login` | **Sign In / Register**| Auth view with demo admin login filler |
+| `/admin` | **Admin Portal** | Metrics cards, destination catalog CRUD & status management |
 
 ---
 

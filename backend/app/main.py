@@ -9,14 +9,15 @@ from app.core.config import settings
 from app.core.database import Base, SessionLocal, engine
 from app.core.security import hash_password
 from app.models import User
-from app.routers import admin, auth, docs, projects, users
+from app.routers import admin, auth, destinations, docs, projects, users
+from app.routers.destinations import seed_destinations_if_empty
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)  # use Alembic migrations for production schema changes
-    if settings.FIRST_ADMIN_EMAIL and settings.FIRST_ADMIN_PASSWORD:
-        with SessionLocal() as db:
+    with SessionLocal() as db:
+        if settings.FIRST_ADMIN_EMAIL and settings.FIRST_ADMIN_PASSWORD:
             if not db.scalar(select(User).where(User.email == settings.FIRST_ADMIN_EMAIL.lower())):
                 db.add(User(
                     email=settings.FIRST_ADMIN_EMAIL.lower(),
@@ -26,6 +27,7 @@ async def lifespan(app: FastAPI):
                     role="admin",
                 ))
                 db.commit()
+        seed_destinations_if_empty(db)
     yield
 
 
@@ -48,7 +50,7 @@ app.add_middleware(
 )
 
 API_PREFIX = "/api"
-for r in (auth.router, users.router, projects.router, docs.router, admin.router):
+for r in (auth.router, users.router, destinations.router, projects.router, docs.router, admin.router):
     app.include_router(r, prefix=API_PREFIX)
 
 
