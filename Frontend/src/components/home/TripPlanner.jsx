@@ -18,7 +18,7 @@ export function TripPlanner({ destinations = [] }) {
       }}
     >
       <div className="trip-planner-fields">
-        <label className="planner-field border-r border-sand/60 pr-2">
+        <label className="planner-field border-r border-sand/60 pr-2 md:border-b-0">
           <span>
             <MapPin size={15} /> Where
           </span>
@@ -32,7 +32,7 @@ export function TripPlanner({ destinations = [] }) {
           </select>
         </label>
 
-        <label className="planner-field border-r border-sand/60 pr-2">
+        <label className="planner-field md:border-r md:border-sand/60 md:pr-2 md:border-b-0">
           <span>
             <CalendarDays size={15} /> When
           </span>
@@ -45,7 +45,7 @@ export function TripPlanner({ destinations = [] }) {
           </select>
         </label>
 
-        <label className="planner-field">
+        <label className="planner-field col-span-2 md:col-span-1 md:border-b-0">
           <span>
             <Users size={15} /> Who
           </span>

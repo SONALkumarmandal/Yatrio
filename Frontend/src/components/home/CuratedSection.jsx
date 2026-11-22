@@ -88,7 +88,7 @@ export function CuratedSection({ destinations = [] }) {
       </section>
 
       <section className="section-shell section-tint" id="packages">
-        <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
+        <div className="mx-auto max-w-[1240px]">
           <SectionHeading
             description="A few well-loved ways to go. Each one thoughtfully planned, and always made your own."
             eyebrow="Curated boarding passes"

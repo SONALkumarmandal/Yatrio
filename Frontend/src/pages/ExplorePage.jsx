@@ -115,7 +115,7 @@ export function ExplorePage() {
   };
 
   return (
-    <div className="min-h-[70vh]">
+    <div>
       <section className="explore-intro">
         <div className="mx-auto max-w-[1240px] px-5 pt-5 sm:px-8 sm:pt-7 lg:pt-8">
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted">
@@ -249,7 +249,7 @@ export function ExplorePage() {
         )}
       </section>
 
-      <section className="mx-auto max-w-[1240px] px-5 pb-14 sm:px-8 sm:pb-20">
+      <section className="mx-auto max-w-[1240px] px-5 pb-12 sm:px-8 sm:pb-14">
         <div className="planner-card">
           <div className="relative z-10 max-w-2xl">
             <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-gold">

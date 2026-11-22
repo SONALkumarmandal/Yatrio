@@ -15,7 +15,7 @@ export function ImageCard({ destination, className = "" }) {
       <Link
         aria-label={`View journey: ${name}, ${state}`}
         className={`relative w-full overflow-hidden bg-sand/30 ${
-          isFeatured ? "flex-1 min-h-[360px]" : "aspect-[4/3]"
+          isFeatured ? "aspect-[4/3] lg:aspect-auto lg:flex-1 lg:min-h-[360px]" : "aspect-[4/3]"
         }`}
         to={`/destinations/${slug}`}
       >

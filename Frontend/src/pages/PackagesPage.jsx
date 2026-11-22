@@ -202,7 +202,7 @@ export function PackagesPage() {
       : PACKAGES.filter((p) => p.destinationKey.toLowerCase() === selectedDestination.toLowerCase());
 
   return (
-    <div className="mx-auto max-w-[1240px] px-5 pt-6 pb-14 sm:px-8 sm:pt-8 sm:pb-16">
+    <div className="mx-auto max-w-[1240px] px-4 pt-6 pb-14 sm:px-8 sm:pt-8 sm:pb-14">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-xs text-muted">
         <Link className="hover:text-teal" to="/">
@@ -212,20 +212,16 @@ export function PackagesPage() {
         <span className="font-semibold text-teal">Tailor-Made Packages</span>
       </div>
 
-      {/* Catchy Eyebrow & Headline as requested */}
+      {/* Refreshing Adventure Eyebrow & Headline with default site typography */}
       <div className="mt-4 max-w-3xl">
-        <div className="inline-flex items-center gap-2 rounded-full border border-teal/20 bg-teal/5 px-3.5 py-1 text-xs font-semibold text-teal">
-          <Sparkles className="text-gold" size={13} />
-          <span>Kaha chaloge ? Ghumate hai na ! 😏👀</span>
-        </div>
+        <Eyebrow>Out of office era · Curated adventures</Eyebrow>
 
-        <h1 className="mt-3 font-display text-2xl font-bold tracking-tight text-ink sm:text-4xl lg:text-[2.65rem] leading-[1.15]">
-          Girlfriend bhi hai ! YA Boyfriend ke saath !? 😏👀🤫
+        <h1 className="mt-2 font-display text-[2.1rem] font-semibold leading-tight tracking-[-0.035em] text-teal sm:text-[2.65rem]">
+          Trade the screen glow for golden hours.
         </h1>
 
-        <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">
-          Chahe romantic couple getaway ho, squad ke saath full masti ya solo trip ka scene — <strong>Yatreo</strong> plans
-          everything directly on WhatsApp. Verified boutique stays, private cabs, handpicked routes and <strong>zero hidden fees</strong>.
+        <p className="mt-2.5 text-sm leading-relaxed text-muted sm:text-base">
+          Whether it’s a spontaneous mountain escape, an island hop with the squad, or a slow coastal reset — <strong>Yatreo</strong> builds your whole route directly on WhatsApp. Handpicked stays, private rides, and <strong>zero hidden fees</strong>.
         </p>
 
         <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-teal font-medium">
@@ -370,16 +366,16 @@ export function PackagesPage() {
                     <span className="text-[10px] font-semibold text-emerald-600">Zero hidden fees</span>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                     <Link
                       aria-label={`View ${pkg.title} details`}
-                      className="flex-1 rounded-full border border-teal/30 py-2.5 text-center text-xs font-bold text-teal transition hover:bg-teal hover:text-cream flex items-center justify-center gap-1"
+                      className="flex-1 rounded-full border border-teal/30 px-3 py-2.5 text-center text-xs font-bold text-teal transition hover:bg-teal hover:text-cream flex items-center justify-center gap-1 whitespace-nowrap"
                       to={`/destinations/${pkg.slug}`}
                     >
                       <span>Itinerary Dekho 👀</span>
                     </Link>
                     <a
-                      className="button-gold flex-1 py-2.5 text-center text-xs font-bold justify-center gap-1.5"
+                      className="button-gold flex-1 px-3 py-2.5 text-center text-xs font-bold justify-center gap-1.5 whitespace-nowrap"
                       href={whatsappUrl(`Hi Yatreo! Mujhe "${pkg.title}" (${pkg.code}) ka scene banana hai! Can you share custom itinerary & quote?`)}
                       rel="noreferrer"
                       target="_blank"
@@ -474,8 +470,8 @@ export function PackagesPage() {
             </p>
           </div>
           <a
-            className="button-gold gap-2 px-6 py-3 text-xs font-bold uppercase tracking-wider whitespace-nowrap shadow-md"
-            href={whatsappUrl("Hi Yatreo! Kaha chaloge? Ghumate hai na! Mujhe custom tailor-made trip plan karwani hai.")}
+            className="button-gold w-full justify-center gap-2 px-6 py-3 text-xs font-bold uppercase tracking-wider whitespace-nowrap shadow-md sm:w-auto"
+            href={whatsappUrl("Hi Yatreo! Ready for an adventure — I’d love to get a custom tailor-made trip planned.")}
             rel="noreferrer"
             target="_blank"
           >

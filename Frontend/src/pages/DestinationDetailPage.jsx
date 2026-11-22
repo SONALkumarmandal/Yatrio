@@ -68,16 +68,17 @@ export function DestinationDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-[60vh] flex-col items-center justify-center px-5 text-center">
-        <Compass className="animate-spin text-teal/40" size={36} />
-        <p className="mt-4 text-sm font-medium text-muted">Discovering journey details...</p>
+      <div className="flex min-h-[590px] flex-col items-center justify-center bg-deep px-5 pt-16 text-center text-cream">
+        <Compass className="animate-spin text-gold" size={36} />
+        <p className="mt-4 text-sm font-medium text-cream/80">Discovering journey details...</p>
       </div>
     );
   }
 
   if (!destination) {
     return (
-      <main className="flex min-h-[60vh] flex-col items-center justify-center px-5 text-center">
+      <div className="flex min-h-[60vh] flex-col items-center justify-center px-5 pt-20 text-center">
+        <div className="fixed inset-x-0 top-0 h-[62px] bg-deep/90" />
         <Compass className="text-teal/55" size={34} />
         <h1 className="mt-4 font-display text-3xl font-semibold text-teal">That way’s still a mystery.</h1>
         <p className="mt-2 max-w-md text-sm leading-6 text-muted">
@@ -86,7 +87,7 @@ export function DestinationDetailPage() {
         <Link className="button-teal mt-5 px-5" to="/destinations">
           Explore all destinations
         </Link>
-      </main>
+      </div>
     );
   }
 
@@ -103,7 +104,7 @@ export function DestinationDetailPage() {
         <div className="destination-hero-shade" />
 
         {/* Top Right Save & Share */}
-        <div className="absolute right-6 top-6 z-20 flex items-center gap-2">
+        <div className="absolute right-5 top-20 z-20 flex items-center gap-2 sm:right-6 sm:top-24">
           <button
             aria-label={saved ? "Remove from wishlist" : "Save destination"}
             className={`flex h-10 w-10 items-center justify-center rounded-full backdrop-blur-md transition-transform hover:scale-110 ${
@@ -142,15 +143,15 @@ export function DestinationDetailPage() {
             <MapPin size={14} /> {destination.region} {destination.country || "India"}
           </span>
 
-          <h1 className="mt-5 font-display text-[3.5rem] font-semibold leading-[0.99] tracking-[-0.05em] text-white sm:text-[5.5rem]">
+          <h1 className="mt-5 font-display text-[2.35rem] font-semibold leading-[1.03] tracking-[-0.045em] text-white sm:text-[4rem] lg:text-[5.5rem]">
             {destination.name}
           </h1>
-          <p className="mt-3 font-display text-xl italic text-white/85 sm:text-[1.65rem]">{destination.state}</p>
+          <p className="mt-3 font-display text-lg italic text-white/85 sm:text-[1.65rem]">{destination.state}</p>
           <p className="mt-4 max-w-xl text-sm leading-7 text-white/80 sm:text-base">{destination.description}</p>
 
-          <div className="mt-7 flex flex-wrap items-center gap-3">
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
             <a
-              className="button-gold min-h-[48px] gap-2 px-6"
+              className="button-gold min-h-[48px] w-full justify-center gap-2 px-6 sm:w-auto"
               href={whatsappUrl(`Hi Yatreo, I'd love to plan a trip to ${destination.name}.`)}
               rel="noreferrer"
               target="_blank"
@@ -158,7 +159,7 @@ export function DestinationDetailPage() {
               <MessageCircle size={17} /> Plan my {destination.name} trip
             </a>
             <a
-              className="inline-flex min-h-[48px] items-center gap-2 rounded-full border border-white/40 px-5 text-sm font-semibold text-white transition hover:bg-white/10"
+              className="inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full border border-white/40 px-5 text-sm font-semibold text-white transition hover:bg-white/10 sm:w-auto"
               href="#the-journey"
             >
               Explore the journey <ArrowDown size={16} />
@@ -338,7 +339,7 @@ export function DestinationDetailPage() {
             </p>
           </div>
           <a
-            className="button-gold gap-2 self-start px-7 py-3.5 lg:self-center"
+            className="button-gold w-full justify-center gap-2 self-start px-7 py-3.5 sm:w-auto lg:self-center"
             href={whatsappUrl(`Hi Yatreo, I'd like a tailor-made package for my upcoming trip to ${destination.name}.`)}
             rel="noreferrer"
             target="_blank"
@@ -350,14 +351,14 @@ export function DestinationDetailPage() {
 
       {/* Related recommendations */}
       {related.length > 0 && (
-        <section className="mx-auto max-w-[1240px] px-5 pb-16 sm:px-8 sm:pb-24">
+        <section className="mx-auto max-w-[1240px] px-5 pb-12 sm:px-8 sm:pb-14">
           <SectionHeading
             description="Other quiet escapes and inspiring routes you might love."
             eyebrow="More to explore"
             linkTo="/destinations"
             title="More journeys like this."
           />
-          <div className="grid gap-6 sm:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {related.map((rel) => (
               <ImageCard destination={rel} key={rel.slug || rel.id} />
             ))}

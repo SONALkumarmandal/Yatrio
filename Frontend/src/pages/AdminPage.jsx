@@ -496,7 +496,7 @@ export function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-cream/35 pb-16">
+    <div className="bg-cream/35 pb-12 sm:pb-14">
       {/* Toast Notification */}
       {toastMsg && (
         <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 rounded-2xl border border-teal/20 bg-ink px-4 py-3 text-xs font-semibold text-cream shadow-2xl animate-in fade-in slide-in-from-bottom-3 duration-200">
@@ -1076,10 +1076,13 @@ export function AdminPage() {
 
       {/* Comprehensive Add / Edit Destination Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/60 p-3 sm:p-5 backdrop-blur-xs">
-          <div className="relative my-6 w-full max-w-3xl rounded-3xl bg-white shadow-2xl overflow-hidden border border-sand animate-in fade-in zoom-in-95 duration-200">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 sm:p-5 backdrop-blur-xs"
+          data-lenis-prevent
+        >
+          <div className="relative flex max-h-[78dvh] w-full max-w-3xl flex-col overflow-hidden rounded-3xl border border-sand bg-white shadow-2xl animate-in fade-in zoom-in-95 duration-200">
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-sand bg-cream/40 px-6 py-4">
+            <div className="flex shrink-0 items-center justify-between border-b border-sand bg-cream/40 px-5 py-3.5 sm:px-6">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal/15 text-teal">
                   <Compass size={22} />
@@ -1103,9 +1106,9 @@ export function AdminPage() {
             </div>
 
             {/* Modal Tabs Navigation */}
-            <div className="flex border-b border-sand bg-white px-6">
+            <div className="flex shrink-0 overflow-x-auto no-scrollbar border-b border-sand bg-white px-4 sm:px-6 whitespace-nowrap">
               <button
-                className={`flex items-center gap-2 border-b-2 py-3 px-3 text-xs font-bold transition ${
+                className={`flex shrink-0 items-center gap-2 border-b-2 py-3 px-3 text-xs font-bold transition ${
                   activeTab === "general"
                     ? "border-teal text-teal"
                     : "border-transparent text-muted hover:text-ink"
@@ -1113,10 +1116,10 @@ export function AdminPage() {
                 onClick={() => setActiveTab("general")}
                 type="button"
               >
-                <MapPin size={14} /> 1. Location & Copy
+                <MapPin size={14} /> 1. Location &amp; Copy
               </button>
               <button
-                className={`flex items-center gap-2 border-b-2 py-3 px-3 text-xs font-bold transition ${
+                className={`flex shrink-0 items-center gap-2 border-b-2 py-3 px-3 text-xs font-bold transition ${
                   activeTab === "media"
                     ? "border-teal text-teal"
                     : "border-transparent text-muted hover:text-ink"
@@ -1124,10 +1127,10 @@ export function AdminPage() {
                 onClick={() => setActiveTab("media")}
                 type="button"
               >
-                <ImageIcon size={14} /> 2. Photos & Gallery
+                <ImageIcon size={14} /> 2. Photos &amp; Gallery
               </button>
               <button
-                className={`flex items-center gap-2 border-b-2 py-3 px-3 text-xs font-bold transition ${
+                className={`flex shrink-0 items-center gap-2 border-b-2 py-3 px-3 text-xs font-bold transition ${
                   activeTab === "timeline"
                     ? "border-teal text-teal"
                     : "border-transparent text-muted hover:text-ink"
@@ -1135,10 +1138,10 @@ export function AdminPage() {
                 onClick={() => setActiveTab("timeline")}
                 type="button"
               >
-                <Calendar size={14} /> 3. Highlights & Flow
+                <Calendar size={14} /> 3. Highlights &amp; Flow
               </button>
               <button
-                className={`flex items-center gap-2 border-b-2 py-3 px-3 text-xs font-bold transition ${
+                className={`flex shrink-0 items-center gap-2 border-b-2 py-3 px-3 text-xs font-bold transition ${
                   activeTab === "pricing"
                     ? "border-teal text-teal"
                     : "border-transparent text-muted hover:text-ink"
@@ -1146,12 +1149,13 @@ export function AdminPage() {
                 onClick={() => setActiveTab("pricing")}
                 type="button"
               >
-                <DollarSign size={14} /> 4. Pricing & Logistics
+                <DollarSign size={14} /> 4. Pricing &amp; Logistics
               </button>
             </div>
 
-            {/* Modal Form Body */}
-            <form className="max-h-[70vh] overflow-y-auto p-6" onSubmit={handleSave}>
+            {/* Modal Form Wrapper with Scrollable Body + Sticky Footer */}
+            <form className="flex min-h-0 flex-1 flex-col overflow-hidden" onSubmit={handleSave}>
+              <div className="flex-1 overflow-y-auto overscroll-contain p-5 sm:p-6" data-lenis-prevent>
               {/* TAB 1: GENERAL & LOCATION */}
               {activeTab === "general" && (
                 <div className="space-y-4">
@@ -1539,21 +1543,33 @@ export function AdminPage() {
                     <div className="mt-3.5 space-y-2.5">
                       {formTimeline.map((item, idx) => (
                         <div
-                          className="flex items-center gap-2.5 rounded-2xl border border-sand bg-cream/20 p-3"
+                          className="flex flex-col gap-2 rounded-2xl border border-sand bg-cream/20 p-3 sm:flex-row sm:items-center"
                           key={idx}
                         >
-                          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-teal text-[11px] font-bold text-cream">
-                            {idx + 1}
-                          </span>
+                          <div className="flex items-center justify-between sm:justify-start gap-2">
+                            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-teal text-[11px] font-bold text-cream">
+                              {idx + 1}
+                            </span>
+                            {formTimeline.length > 1 && (
+                              <button
+                                className="rounded-lg p-1.5 text-muted hover:bg-red-50 hover:text-red-600 transition sm:hidden"
+                                onClick={() => removeTimelineDay(idx)}
+                                title="Delete day"
+                                type="button"
+                              >
+                                <Trash2 size={13} />
+                              </button>
+                            )}
+                          </div>
                           <input
-                            className="w-1/3 rounded-xl border border-sand bg-white p-2 text-xs font-semibold text-ink outline-none focus:border-teal"
+                            className="w-full rounded-xl border border-sand bg-white p-2 text-xs font-semibold text-ink outline-none focus:border-teal sm:w-1/3"
                             onChange={(e) => updateTimelineDay(idx, "title", e.target.value)}
                             placeholder="Title (e.g. Arrival in Paradise)"
                             type="text"
                             value={item.title}
                           />
                           <input
-                            className="flex-1 rounded-xl border border-sand bg-white p-2 text-xs text-ink outline-none focus:border-teal"
+                            className="w-full flex-1 rounded-xl border border-sand bg-white p-2 text-xs text-ink outline-none focus:border-teal"
                             onChange={(e) => updateTimelineDay(idx, "vibe", e.target.value)}
                             placeholder="Vibe summary (e.g. Sunset drinks, scenic beach stroll)"
                             type="text"
@@ -1561,7 +1577,7 @@ export function AdminPage() {
                           />
                           {formTimeline.length > 1 && (
                             <button
-                              className="rounded-lg p-2 text-muted hover:bg-red-50 hover:text-red-600 transition"
+                              className="hidden rounded-lg p-2 text-muted hover:bg-red-50 hover:text-red-600 transition sm:block"
                               onClick={() => removeTimelineDay(idx)}
                               title="Delete day"
                               type="button"
@@ -1633,8 +1649,10 @@ export function AdminPage() {
                 </div>
               )}
 
-              {/* Form Actions Footer */}
-              <div className="mt-8 flex items-center justify-between border-t border-sand pt-4">
+              </div>
+
+              {/* Sticky Form Actions Footer */}
+              <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-t border-sand bg-white px-5 py-3.5 sm:px-6">
                 <button
                   className="rounded-xl px-4 py-2 text-xs font-semibold text-muted hover:bg-sand/40 transition"
                   onClick={() => setIsModalOpen(false)}
@@ -1643,7 +1661,7 @@ export function AdminPage() {
                   Cancel
                 </button>
 
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   {activeTab !== "pricing" && (
                     <button
                       className="rounded-xl border border-sand bg-white px-4 py-2 text-xs font-semibold text-ink hover:bg-sand/30"

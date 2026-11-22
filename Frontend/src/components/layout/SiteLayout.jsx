@@ -5,7 +5,7 @@ import { PlaneCursor } from "../common/PlaneCursor";
 
 export function SiteLayout({ children }) {
   return (
-    <div className="flex min-h-screen flex-col bg-cream text-ink antialiased">
+    <div className="site-shell flex flex-col overflow-x-clip bg-cream text-ink antialiased">
       <PlaneCursor />
       <Header />
       <main className="flex-1">{children}</main>

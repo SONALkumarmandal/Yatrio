@@ -253,8 +253,8 @@ export function DashboardPage() {
 
       {/* New Project Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm" data-lenis-prevent>
+          <div className="max-h-[85vh] w-full max-w-md overflow-y-auto overscroll-contain rounded-2xl bg-white p-6 shadow-xl" data-lenis-prevent>
             <h3 className="font-display text-xl font-semibold text-ink">Create New Trip Plan</h3>
             <p className="mt-1 text-xs text-muted">
               Give your upcoming holiday plan a name and brief travel vision.

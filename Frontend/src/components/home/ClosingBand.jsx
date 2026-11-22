@@ -31,7 +31,7 @@ export function ClosingBand() {
         </div>
 
         <a
-          className="button-teal min-h-12 gap-2 px-6 text-xs uppercase tracking-wider font-semibold whitespace-nowrap shadow-sm hover:shadow-md transition"
+          className="button-teal min-h-12 w-full justify-center gap-2 px-6 text-xs uppercase tracking-wider font-semibold shadow-sm hover:shadow-md transition sm:w-auto whitespace-nowrap"
           href={whatsappUrl("Hi Yatreo! I’d love to get a tailor-made package designed for our upcoming trip.")}
           rel="noreferrer"
           target="_blank"

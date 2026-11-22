@@ -47,15 +47,15 @@ export function AboutPage() {
       </div>
 
       {/* Brand Identity Showcase Card */}
-      <div className="mt-7 overflow-hidden rounded-3xl border border-teal/20 bg-[#0F5C5E] p-7 text-cream shadow-xl sm:p-10">
+      <div className="mt-7 overflow-hidden rounded-3xl border border-teal/20 bg-[#0F5C5E] p-5 text-cream shadow-xl sm:p-10">
         <div className="grid items-center gap-8 lg:grid-cols-2">
           <div>
             <span className="inline-block rounded-full bg-warm px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider text-ink">
               Confirmed Brand Identity
             </span>
-            <div className="mt-6 flex items-center gap-4">
-              <YatreoMark onDark size={56} />
-              <span className="font-wordmark text-4xl font-extrabold tracking-[-0.05em] text-cream">yatreo</span>
+            <div className="mt-6 flex items-center gap-3 sm:gap-4">
+              <YatreoMark onDark size={50} />
+              <span className="font-wordmark text-3xl font-extrabold tracking-[-0.05em] text-cream sm:text-4xl">yatreo</span>
             </div>
             <h2 className="mt-6 font-display text-2xl font-medium sm:text-3xl text-cream">
               Every yatra, your story.
@@ -68,36 +68,36 @@ export function AboutPage() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-white/15 bg-white/10 p-6 backdrop-blur-md">
+          <div className="rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur-md sm:p-6">
             <h3 className="font-display text-lg font-semibold text-cream">What is confirmed</h3>
             <div className="mt-4 space-y-3 text-xs text-cream/80">
-              <div className="flex justify-between border-b border-white/10 pb-2">
+              <div className="flex flex-col gap-0.5 border-b border-white/10 pb-2 sm:flex-row sm:justify-between sm:gap-4">
                 <span className="text-cream/50 uppercase tracking-wider text-[10px]">Name</span>
-                <span className="font-semibold text-cream">Yatreo, from yatra + yatri</span>
+                <span className="font-semibold text-cream sm:text-right">Yatreo, from yatra + yatri</span>
               </div>
-              <div className="flex justify-between border-b border-white/10 pb-2">
+              <div className="flex flex-col gap-0.5 border-b border-white/10 pb-2 sm:flex-row sm:justify-between sm:gap-4">
                 <span className="text-cream/50 uppercase tracking-wider text-[10px]">Logo</span>
-                <span className="font-semibold text-cream">The Fork, with a plane</span>
+                <span className="font-semibold text-cream sm:text-right">The Fork, with a plane</span>
               </div>
-              <div className="flex justify-between border-b border-white/10 pb-2">
+              <div className="flex flex-col gap-0.5 border-b border-white/10 pb-2 sm:flex-row sm:justify-between sm:gap-4">
                 <span className="text-cream/50 uppercase tracking-wider text-[10px]">Palette</span>
-                <span className="font-semibold text-cream">Palette A · Sunrise Over Water</span>
+                <span className="font-semibold text-cream sm:text-right">Palette A · Sunrise Over Water</span>
               </div>
-              <div className="flex justify-between border-b border-white/10 pb-2">
+              <div className="flex flex-col gap-0.5 border-b border-white/10 pb-2 sm:flex-row sm:justify-between sm:gap-4">
                 <span className="text-cream/50 uppercase tracking-wider text-[10px]">Typography</span>
-                <span className="font-semibold text-cream">Fraunces · Hind · Yatra One</span>
+                <span className="font-semibold text-cream sm:text-right">Fraunces · Hind · Yatra One</span>
               </div>
-              <div className="flex justify-between border-b border-white/10 pb-2">
+              <div className="flex flex-col gap-0.5 border-b border-white/10 pb-2 sm:flex-row sm:justify-between sm:gap-4">
                 <span className="text-cream/50 uppercase tracking-wider text-[10px]">Parent Company</span>
-                <span className="font-semibold text-warm">Rishav Travels (25+ years)</span>
+                <span className="font-semibold text-warm sm:text-right">Rishav Travels (25+ years)</span>
               </div>
-              <div className="flex justify-between border-b border-white/10 pb-2">
+              <div className="flex flex-col gap-0.5 border-b border-white/10 pb-2 sm:flex-row sm:justify-between sm:gap-4">
                 <span className="text-cream/50 uppercase tracking-wider text-[10px]">Brand Voice</span>
-                <span className="font-semibold text-cream">A well-travelled friend</span>
+                <span className="font-semibold text-cream sm:text-right">A well-travelled friend</span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex flex-col gap-0.5 sm:flex-row sm:justify-between sm:gap-4">
                 <span className="text-cream/50 uppercase tracking-wider text-[10px]">Booking</span>
-                <span className="font-semibold text-warm">Through WhatsApp, no accounts</span>
+                <span className="font-semibold text-warm sm:text-right">Through WhatsApp, no accounts</span>
               </div>
             </div>
           </div>
