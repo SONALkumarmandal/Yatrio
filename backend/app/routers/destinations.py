@@ -231,10 +231,14 @@ def get_regions(db: Session = Depends(get_db)):
 @router.get("/{slug_or_id}", response_model=DestinationOut)
 def get_destination_detail(slug_or_id: str, db: Session = Depends(get_db)):
     seed_destinations_if_empty(db)
-    dest = None
     if slug_or_id.isdigit():
-        dest = db.get(Destination, int(slug_or_id))
-    if not dest:
+        dest = db.scalar(
+            select(Destination).where(
+                Destination.id == int(slug_or_id),
+                Destination.is_published.is_(True),
+            )
+        )
+    else:
         dest = db.scalar(
             select(Destination).where(
                 Destination.slug == slug_or_id,

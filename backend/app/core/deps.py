@@ -26,9 +26,8 @@ def get_current_user(
     creds: HTTPAuthorizationCredentials | None = Depends(bearer_scheme),
     db: Session = Depends(get_db),
 ) -> User:
-    """JWT from the Authorization header, falling back to the server-side session cookie.
-    The JWT's jti must also match a live, non-revoked row in user_sessions."""
-    token = creds.credentials if creds else request.session.get("access_token")
+    """Require a bearer JWT whose jti matches a live, non-revoked user_sessions row."""
+    token = creds.credentials if creds else None
     if not token:
         raise _unauthorized()
     try:

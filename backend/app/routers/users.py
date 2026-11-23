@@ -65,7 +65,6 @@ def update_me(
 @router.delete("/me", status_code=status.HTTP_204_NO_CONTENT)
 def delete_me(request: Request, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     delete_user_and_assets(db, user)
-    request.session.clear()
     log_activity(db, request, "user.self_delete", None, f"user_id={user.id}")
 
 

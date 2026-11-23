@@ -1,13 +1,16 @@
+import secrets
+
 import pytest
 from fastapi.testclient import TestClient
+from pydantic import ValidationError
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.core.config import settings
+from app.core.config import Settings
 from app.core.database import Base, get_db
 from app.core.security import hash_password
 from app.main import app
-from app.models import User
+from app.models import Destination, User
 from app.routers.destinations import seed_destinations_if_empty
 
 TEST_DB_URL = "sqlite:///./test_yatrio.db"
@@ -56,6 +59,35 @@ def test_health_check(client):
     assert res.json() == {"status": "ok"}
 
 
+def test_cors_normalizes_vercel_origin():
+    config = Settings(
+        JWT_SECRET_KEY=secrets.token_urlsafe(48),
+        ENVIRONMENT="production",
+        CORS_ORIGINS="https://yatrio.vercel.app/",
+        FIRST_ADMIN_EMAIL="",
+        FIRST_ADMIN_PASSWORD="",
+        _env_file=None,
+    )
+    assert config.cors_origins_list == ["https://yatrio.vercel.app"]
+    assert config.FIRST_ADMIN_EMAIL is None
+    assert config.FIRST_ADMIN_PASSWORD is None
+
+
+def test_settings_rejects_weak_jwt_secret():
+    with pytest.raises(ValidationError):
+        Settings(JWT_SECRET_KEY="short", _env_file=None)
+
+
+def test_production_settings_reject_http_origins():
+    with pytest.raises(ValidationError):
+        Settings(
+            JWT_SECRET_KEY=secrets.token_urlsafe(48),
+            ENVIRONMENT="production",
+            CORS_ORIGINS="http://localhost:5173",
+            _env_file=None,
+        )
+
+
 def test_auth_registration_and_login(client):
     # Register new user
     reg_res = client.post(
@@ -78,9 +110,12 @@ def test_auth_registration_and_login(client):
         json={"email": "traveler@yatrio.com", "password": "Password123!"},
     )
     assert login_res.status_code == 200
+    assert "set-cookie" not in login_res.headers
     token_data = login_res.json()
     assert "access_token" in token_data
     token = token_data["access_token"]
+
+    assert client.get("/api/users/me").status_code == 401
 
     # Verify /api/users/me
     headers = {"Authorization": f"Bearer {token}"}
@@ -111,6 +146,22 @@ def test_public_destinations(client):
     search_res = client.get("/api/destinations?search=backwaters")
     assert search_res.status_code == 200
     assert search_res.json()["total"] >= 1
+
+
+def test_unpublished_destination_is_not_public_by_id(client):
+    with TestingSessionLocal() as db:
+        destination = Destination(
+            slug="unpublished-security-test",
+            title="Unpublished test destination",
+            is_published=False,
+        )
+        db.add(destination)
+        db.commit()
+        db.refresh(destination)
+        destination_id = destination.id
+
+    response = client.get(f"/api/destinations/{destination_id}")
+    assert response.status_code == 404
 
 
 def test_admin_destinations(client):

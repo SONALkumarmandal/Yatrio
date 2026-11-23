@@ -1,6 +1,6 @@
 # Trip & Design API
 
-FastAPI · Neon Postgres · SQLAlchemy 2 · bcrypt · JWT + server-side sessions · Cloudinary
+FastAPI · Neon Postgres · SQLAlchemy 2 · bcrypt · bearer JWT · Cloudinary
 
 ## Run
 ```bash
@@ -29,9 +29,10 @@ app/
 
 ## Auth model
 - Login verifies the bcrypt hash, creates a `user_sessions` row, and issues a JWT whose `jti` points at that row.
-- The JWT is returned in the body **and** stored in a signed session cookie. Send either `Authorization: Bearer <token>` or rely on the cookie.
+- The JWT is returned in the response body. Send it as `Authorization: Bearer <token>`.
 - Every request checks the JWT signature/expiry **and** that the session row is not revoked, so logout, suspension and password change take effect immediately.
-- Cookie auth: `SameSite=Lax` in dev, `None; Secure` in production. If you use cookies cross-site, add CSRF protection; Bearer tokens avoid this.
+- Authentication is bearer-token only; browsers do not automatically attach the `Authorization` header cross-site, so cookie-based CSRF does not apply.
+- Set `ENVIRONMENT=production`, `CORS_ORIGINS=https://yatrio.vercel.app`, and a generated `JWT_SECRET_KEY` in the backend deployment environment. Generate it with `python -c "import secrets; print(secrets.token_urlsafe(48))"`. Never reuse or commit production secrets.
 
 ## Notes
 - Uploads (`POST /docs`, `PUT /users/me`, admin destinations) are `multipart/form-data`.

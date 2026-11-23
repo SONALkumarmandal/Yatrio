@@ -202,18 +202,20 @@ The backend expects the following values in `backend/.env`:
 APP_NAME="Yatrio"
 ENVIRONMENT=development
 DATABASE_URL=postgresql://USER:PASSWORD@ep-xxxx.region.aws.neon.tech/neondb?sslmode=require
-JWT_SECRET_KEY=your_jwt_secret
-SESSION_SECRET_KEY=your_session_secret
+# Generate with: python -c "import secrets; print(secrets.token_urlsafe(48))"
+JWT_SECRET_KEY=
 ACCESS_TOKEN_EXPIRE_MINUTES=60
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
 CLOUDINARY_FOLDER=your_folder
-CORS_ORIGINS=http://localhost:3000,http://localhost:5173
-FIRST_ADMIN_EMAIL=admin@example.com
+CORS_ORIGINS=http://localhost:3000,http://localhost:5173,https://yatrio.vercel.app
+FIRST_ADMIN_EMAIL=
 FIRST_ADMIN_USERNAME=admin
-FIRST_ADMIN_PASSWORD=your_secure_password
+FIRST_ADMIN_PASSWORD=
 ```
+
+Use a unique admin password of at least 16 characters. In production, set `ENVIRONMENT=production` and `CORS_ORIGINS=https://yatrio.vercel.app` in the backend host's environment. Keep real credentials out of Git.
 
 ---
 

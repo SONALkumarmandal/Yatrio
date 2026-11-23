@@ -59,10 +59,6 @@ def login(payload: LoginRequest, request: Request, db: Session = Depends(get_db)
     db.commit()
     db.refresh(user)
 
-    # server-side session cookie (signed by SessionMiddleware) so browsers don't need to handle the token
-    request.session["access_token"] = token
-    request.session["user_id"] = user.id
-
     log_activity(db, request, "auth.login", user.id)
     return TokenOut(access_token=token, expires_at=expires_at, user=user)
 
@@ -74,6 +70,5 @@ def logout(request: Request, user: User = Depends(get_current_user), db: Session
     if sess:
         sess.revoked = True
         db.commit()
-    request.session.clear()
     log_activity(db, request, "auth.logout", user.id)
     return Message(message="Logged out")

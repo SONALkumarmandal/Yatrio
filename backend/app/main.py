@@ -3,7 +3,6 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import select
-from starlette.middleware.sessions import SessionMiddleware
 
 from app.core.config import settings
 from app.core.database import Base, SessionLocal, engine
@@ -36,17 +35,9 @@ app = FastAPI(title=settings.APP_NAME, version="1.0.0", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins_list,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-app.add_middleware(
-    SessionMiddleware,
-    secret_key=settings.SESSION_SECRET_KEY,
-    session_cookie="session",
-    max_age=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
-    same_site="none" if settings.is_production else "lax",
-    https_only=settings.is_production,
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type"],
 )
 
 API_PREFIX = "/api"
