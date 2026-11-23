@@ -47,31 +47,11 @@ function normalizeDestination(d) {
   };
 }
 
-export async function getDestinations({ page = 1, pageSize = 30, search = "", region = "" } = {}) {
-  try {
-    const params = new URLSearchParams();
-    if (page) params.append("page", page);
-    if (pageSize) params.append("page_size", pageSize);
-    if (search) params.append("search", search);
-    if (region && region !== "All regions") params.append("region", region);
+function canUseLocalFallback(err) {
+  return import.meta.env.DEV && !err?.status;
+}
 
-    const query = params.toString() ? `?${params.toString()}` : "";
-    const res = await request(`/destinations${query}`);
-    
-    if (res && res.items && res.items.length > 0) {
-      return {
-        items: res.items.map(normalizeDestination),
-        total: res.total,
-        page: res.page,
-        pageSize: res.page_size,
-        fromApi: true,
-      };
-    }
-  } catch (err) {
-    console.warn("API destination fetch fallback to local data:", err.message);
-  }
-
-  // Fallback to local static data
+function getLocalDestinations({ search, region }) {
   let filtered = [...localDestinations].map(normalizeDestination);
   if (region && region !== "All regions") {
     filtered = filtered.filter((d) => d.region.toLowerCase() === region.toLowerCase());
@@ -96,31 +76,59 @@ export async function getDestinations({ page = 1, pageSize = 30, search = "", re
   };
 }
 
+export async function getDestinations({ page = 1, pageSize = 30, search = "", region = "" } = {}) {
+  try {
+    const params = new URLSearchParams();
+    if (page) params.append("page", page);
+    if (pageSize) params.append("page_size", pageSize);
+    if (search) params.append("search", search);
+    if (region && region !== "All regions") params.append("region", region);
+
+    const query = params.toString() ? `?${params.toString()}` : "";
+    const res = await request(`/destinations${query}`);
+
+    if (!res || !Array.isArray(res.items)) {
+      throw new Error("The destinations API returned an invalid response.");
+    }
+    return {
+      items: res.items.map(normalizeDestination),
+      total: res.total,
+      page: res.page,
+      pageSize: res.page_size,
+      fromApi: true,
+    };
+  } catch (err) {
+    if (!canUseLocalFallback(err)) throw err;
+    console.warn("API destination fetch fallback to local data:", err.message);
+    return getLocalDestinations({ search, region });
+  }
+}
+
 export async function getDestinationBySlug(slug) {
   try {
     const data = await request(`/destinations/${slug}`);
-    if (data) {
-      return normalizeDestination(data);
+    if (!data || typeof data !== "object") {
+      throw new Error("The destination API returned an invalid response.");
     }
+    return normalizeDestination(data);
   } catch (err) {
+    if (!canUseLocalFallback(err)) throw err;
     console.warn(`API detail fetch for ${slug} fallback to local:`, err.message);
+    const local = localDestinations.find((d) => d.slug === slug);
+    return local ? normalizeDestination(local) : null;
   }
-
-  const local = localDestinations.find((d) => d.slug === slug);
-  if (local) {
-    return normalizeDestination(local);
-  }
-  return null;
 }
 
 export async function getRegions() {
   try {
     const regions = await request(`/destinations/regions`);
-    if (Array.isArray(regions) && regions.length > 0) {
-      return regions;
+    if (!Array.isArray(regions)) {
+      throw new Error("The regions API returned an invalid response.");
     }
-  } catch {
-    // fallback
+    return regions;
+  } catch (err) {
+    if (!canUseLocalFallback(err)) throw err;
+    console.warn("API regions fetch fallback to local data:", err.message);
+    return localRegions;
   }
-  return localRegions;
 }

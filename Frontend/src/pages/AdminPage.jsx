@@ -34,7 +34,6 @@ import {
 import { useAuth } from "../context/AuthContext";
 import { YatreoMark } from "../components/layout/Logo";
 import * as adminApi from "../services/adminApi";
-import * as destinationsApi from "../services/destinationsApi";
 import { demoDb, resetDemoDb } from "../services/demoDb";
 
 // Curated high-res Unsplash travel photos for one-click assignment
@@ -122,6 +121,7 @@ export function AdminPage() {
   const [destinations, setDestinations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [analytics, setAnalytics] = useState(null);
+  const [loadError, setLoadError] = useState("");
   const [toastMsg, setToastMsg] = useState("");
 
   // Filters & Display
@@ -168,24 +168,35 @@ export function AdminPage() {
 
   async function loadData() {
     setLoading(true);
+    setLoadError("");
     try {
       const [destRes, analRes] = await Promise.allSettled([
         adminApi.getAdminDestinations({ search: "", pageSize: 100 }),
         adminApi.getAdminAnalytics(),
       ]);
 
-      if (destRes.status === "fulfilled" && destRes.value?.items) {
+      const failures = [];
+      if (destRes.status === "fulfilled" && Array.isArray(destRes.value?.items)) {
         setDestinations(destRes.value.items);
       } else {
-        const pub = await destinationsApi.getDestinations({ pageSize: 100 });
-        if (pub?.items) setDestinations(pub.items);
+        failures.push(
+          destRes.status === "rejected"
+            ? destRes.reason?.message || "Unexpected error loading destinations."
+            : "The admin destinations API returned an invalid response."
+        );
       }
 
       if (analRes.status === "fulfilled" && analRes.value) {
         setAnalytics(analRes.value);
+      } else if (analRes.status === "rejected") {
+        failures.push(analRes.reason?.message || "Unexpected error loading analytics.");
+      }
+      if (failures.length > 0) {
+        setLoadError(failures.join(" "));
       }
     } catch (err) {
       console.error("Admin data load error:", err);
+      setLoadError(err.message || "Unexpected error loading admin data.");
     } finally {
       setLoading(false);
     }
@@ -473,20 +484,27 @@ export function AdminPage() {
           </div>
           <h2 className="mt-4 font-display text-xl font-semibold text-ink">Yatreo Admin Console</h2>
           <p className="mt-2 text-xs leading-relaxed text-muted">
-            You are currently browsing without an active admin session. Click below to enter the console using the local Demo Database engine.
+            Sign in with an administrator account to access this console.
           </p>
-          <button
-            className="button-gold mt-6 w-full justify-center py-3 text-xs font-bold shadow-sm"
-            onClick={() => {
-              const demoUser = demoDb.getDemoAdminUser();
-              localStorage.setItem("yatrio_token", "demo-token-admin");
-              localStorage.setItem("yatrio_user", JSON.stringify(demoUser));
-              window.location.reload();
-            }}
-            type="button"
-          >
-            ⚡ Enter Demo Admin Console (Instant Test)
-          </button>
+          {import.meta.env.DEV && (
+            <button
+              className="button-gold mt-6 w-full justify-center py-3 text-xs font-bold shadow-sm"
+              onClick={() => {
+                const demoUser = demoDb.getDemoAdminUser();
+                localStorage.setItem("yatrio_token", "demo-token-admin");
+                localStorage.setItem("yatrio_user", JSON.stringify(demoUser));
+                window.location.reload();
+              }}
+              type="button"
+            >
+              Enter Demo Admin Console
+            </button>
+          )}
+          {!import.meta.env.DEV && (
+            <Link className="button-gold mt-6 inline-flex w-full justify-center py-3 text-xs font-bold shadow-sm" to="/login">
+              Sign In
+            </Link>
+          )}
           <Link className="mt-4 inline-block text-xs text-teal hover:underline" to="/">
             ← Back to Public Site
           </Link>
@@ -516,11 +534,13 @@ export function AdminPage() {
               <div className="flex items-center gap-2">
                 <span className="font-display text-sm font-bold text-ink">Yatreo Studio</span>
                 <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-800">
-                  Demo DB Connected
+                  {import.meta.env.DEV ? "Development mode" : "Backend API"}
                 </span>
               </div>
               <p className="text-[11px] text-muted hidden sm:block">
-                All changes persist to local database (`db.ts` / `localStorage`)
+                {import.meta.env.DEV
+                  ? "Development data may use the local demo database."
+                  : "Changes are managed by the backend API."}
               </p>
             </div>
           </div>
@@ -533,20 +553,22 @@ export function AdminPage() {
             >
               <ExternalLink size={13} /> View Site
             </Link>
-            <button
-              className="inline-flex items-center gap-1.5 rounded-full border border-sand bg-white px-3 py-1.5 font-medium text-muted transition hover:bg-sand/40 hover:text-ink"
-              onClick={() => {
-                if (window.confirm("Reset demo database back to default seed destinations?")) {
-                  resetDemoDb();
-                  loadData();
-                  showToast("Demo database reset to factory presets!");
-                }
-              }}
-              title="Reset Database to original 12 destinations"
-              type="button"
-            >
-              <RefreshCw size={12} /> Reset DB
-            </button>
+            {import.meta.env.DEV && (
+              <button
+                className="inline-flex items-center gap-1.5 rounded-full border border-sand bg-white px-3 py-1.5 font-medium text-muted transition hover:bg-sand/40 hover:text-ink"
+                onClick={() => {
+                  if (window.confirm("Reset demo database back to default seed destinations?")) {
+                    resetDemoDb();
+                    loadData();
+                    showToast("Demo database reset to factory presets!");
+                  }
+                }}
+                title="Reset Database to original 12 destinations"
+                type="button"
+              >
+                <RefreshCw size={12} /> Reset DB
+              </button>
+            )}
             <button
               className="button-gold inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 font-semibold shadow-xs"
               onClick={openCreateModal}
@@ -559,6 +581,12 @@ export function AdminPage() {
       </div>
 
       <div className="mx-auto max-w-[1320px] px-5 pt-8 sm:px-8">
+        {loadError && (
+          <div className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
+            Failed to load admin data: {loadError}
+          </div>
+        )}
+
         {/* Executive Overview Header */}
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <div>
@@ -924,14 +952,16 @@ export function AdminPage() {
                             >
                               <ExternalLink size={14} />
                             </Link>
-                            <button
-                              className="rounded-lg p-2 text-muted transition hover:bg-sand/40 hover:text-ink"
-                              onClick={() => handleDuplicate(dest)}
-                              title="Duplicate Destination"
-                              type="button"
-                            >
-                              <Copy size={14} />
-                            </button>
+                            {import.meta.env.DEV && (
+                              <button
+                                className="rounded-lg p-2 text-muted transition hover:bg-sand/40 hover:text-ink"
+                                onClick={() => handleDuplicate(dest)}
+                                title="Duplicate Destination"
+                                type="button"
+                              >
+                                <Copy size={14} />
+                              </button>
+                            )}
                             <button
                               className="rounded-lg bg-teal/10 p-2 font-medium text-teal transition hover:bg-teal hover:text-white"
                               onClick={() => openEditModal(dest)}

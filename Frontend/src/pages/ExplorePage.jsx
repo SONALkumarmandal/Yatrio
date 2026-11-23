@@ -67,9 +67,13 @@ export function ExplorePage() {
   // Load regions on mount
   useEffect(() => {
     async function loadRegions() {
-      const reg = await destinationsApi.getRegions();
-      if (reg && reg.length > 0) {
-        setRegionsList(reg);
+      try {
+        const reg = await destinationsApi.getRegions();
+        if (reg && reg.length > 0) {
+          setRegionsList(reg);
+        }
+      } catch (err) {
+        console.error("Failed to load destination regions:", err);
       }
     }
     loadRegions();

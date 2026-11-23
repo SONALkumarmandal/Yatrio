@@ -1,6 +1,6 @@
 import { demoDb } from "./demoDb";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "/api";
+const API_BASE = (import.meta.env.VITE_API_BASE_URL || "/api").replace(/\/+$/, "");
 
 function parseBody(body) {
   if (!body) return {};
@@ -169,8 +169,10 @@ export async function request(endpoint, options = {}) {
 
     return data;
   } catch (err) {
-    // If backend is offline or fetch failed, seamlessly route to demoDb!
-    console.info(`[Demo DB Active] Handling '${options.method || "GET"} ${endpoint}' via local demoDb:`, err.message);
-    return handleDemoDbRequest(endpoint, options);
+    if (import.meta.env.DEV && !err?.status) {
+      console.info(`[Demo DB Active] Handling '${options.method || "GET"} ${endpoint}' via local demoDb:`, err.message);
+      return handleDemoDbRequest(endpoint, options);
+    }
+    throw err;
   }
 }
