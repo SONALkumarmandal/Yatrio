@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import select
+from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.core.database import Base, SessionLocal, engine
@@ -12,20 +13,40 @@ from app.routers import admin, auth, destinations, docs, projects, users
 from app.routers.destinations import seed_destinations_if_empty
 
 
+def seed_first_admin_if_missing(db: Session) -> None:
+    if not settings.FIRST_ADMIN_EMAIL or not settings.FIRST_ADMIN_PASSWORD:
+        return
+
+    email = settings.FIRST_ADMIN_EMAIL.lower()
+    existing_email_user = db.scalar(select(User).where(User.email == email))
+    if existing_email_user:
+        if existing_email_user.role != "admin":
+            raise RuntimeError("FIRST_ADMIN_EMAIL belongs to an existing non-admin user")
+        return
+
+    existing_username_user = db.scalar(
+        select(User).where(User.username == settings.FIRST_ADMIN_USERNAME)
+    )
+    if existing_username_user:
+        if existing_username_user.role != "admin":
+            raise RuntimeError("FIRST_ADMIN_USERNAME belongs to an existing non-admin user")
+        return
+
+    db.add(User(
+        email=email,
+        username=settings.FIRST_ADMIN_USERNAME,
+        full_name="Administrator",
+        hashed_password=hash_password(settings.FIRST_ADMIN_PASSWORD),
+        role="admin",
+    ))
+    db.commit()
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)  # use Alembic migrations for production schema changes
     with SessionLocal() as db:
-        if settings.FIRST_ADMIN_EMAIL and settings.FIRST_ADMIN_PASSWORD:
-            if not db.scalar(select(User).where(User.email == settings.FIRST_ADMIN_EMAIL.lower())):
-                db.add(User(
-                    email=settings.FIRST_ADMIN_EMAIL.lower(),
-                    username=settings.FIRST_ADMIN_USERNAME,
-                    full_name="Administrator",
-                    hashed_password=hash_password(settings.FIRST_ADMIN_PASSWORD),
-                    role="admin",
-                ))
-                db.commit()
+        seed_first_admin_if_missing(db)
         seed_destinations_if_empty(db)
     yield
 

@@ -31,9 +31,24 @@ class Settings(BaseSettings):
     FIRST_ADMIN_USERNAME: str = "admin"
     FIRST_ADMIN_PASSWORD: str | None = None
 
-    @field_validator("FIRST_ADMIN_EMAIL", "FIRST_ADMIN_PASSWORD", mode="before")
+    @field_validator("FIRST_ADMIN_EMAIL", mode="before")
     @classmethod
-    def empty_admin_settings_are_unset(cls, value: str | None) -> str | None:
+    def normalize_first_admin_email(cls, value: str | None) -> str | None:
+        if isinstance(value, str) and not value.strip():
+            return None
+        return value.strip() if isinstance(value, str) else value
+
+    @field_validator("FIRST_ADMIN_USERNAME")
+    @classmethod
+    def normalize_first_admin_username(cls, value: str) -> str:
+        normalized = value.strip()
+        if not normalized:
+            raise ValueError("FIRST_ADMIN_USERNAME must not be empty")
+        return normalized
+
+    @field_validator("FIRST_ADMIN_PASSWORD", mode="before")
+    @classmethod
+    def empty_first_admin_password_is_unset(cls, value: str | None) -> str | None:
         if isinstance(value, str) and not value.strip():
             return None
         return value

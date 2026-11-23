@@ -3,13 +3,13 @@ import secrets
 import pytest
 from fastapi.testclient import TestClient
 from pydantic import ValidationError
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
 
-from app.core.config import Settings
+from app.core.config import Settings, settings
 from app.core.database import Base, get_db
 from app.core.security import hash_password
-from app.main import app
+from app.main import app, seed_first_admin_if_missing
 from app.models import Destination, User
 from app.routers.destinations import seed_destinations_if_empty
 
@@ -73,6 +73,18 @@ def test_cors_normalizes_vercel_origin():
     assert config.FIRST_ADMIN_PASSWORD is None
 
 
+def test_admin_settings_trim_email_and_username():
+    config = Settings(
+        JWT_SECRET_KEY=secrets.token_urlsafe(48),
+        FIRST_ADMIN_EMAIL=" admin@example.test ",
+        FIRST_ADMIN_USERNAME=" admin ",
+        FIRST_ADMIN_PASSWORD="a-unique-admin-password-long-enough",
+        _env_file=None,
+    )
+    assert config.FIRST_ADMIN_EMAIL == "admin@example.test"
+    assert config.FIRST_ADMIN_USERNAME == "admin"
+
+
 def test_settings_rejects_weak_jwt_secret():
     with pytest.raises(ValidationError):
         Settings(JWT_SECRET_KEY="short", _env_file=None)
@@ -86,6 +98,31 @@ def test_production_settings_reject_http_origins():
             CORS_ORIGINS="http://localhost:5173",
             _env_file=None,
         )
+
+
+def test_admin_bootstrap_skips_existing_admin_username(monkeypatch):
+    monkeypatch.setattr(settings, "FIRST_ADMIN_EMAIL", "new-admin@example.test")
+    monkeypatch.setattr(settings, "FIRST_ADMIN_USERNAME", "admin")
+    monkeypatch.setattr(settings, "FIRST_ADMIN_PASSWORD", "a-unique-admin-password-long-enough")
+
+    with TestingSessionLocal() as db:
+        existing_admin = User(
+            email="existing-admin@example.test",
+            username="admin",
+            hashed_password=hash_password("Existing-Admin-Password-2026!"),
+            role="admin",
+        )
+        db.add(existing_admin)
+        db.commit()
+
+        seed_first_admin_if_missing(db)
+
+        assert db.scalar(
+            select(User).where(User.email == "new-admin@example.test")
+        ) is None
+
+        db.delete(existing_admin)
+        db.commit()
 
 
 def test_auth_registration_and_login(client):
