@@ -110,7 +110,7 @@ export function DestinationDetailPage() {
             className={`flex h-10 w-10 items-center justify-center rounded-full backdrop-blur-md transition-transform hover:scale-110 ${
               saved ? "bg-white text-rose-500 shadow-md" : "bg-black/40 text-white hover:bg-black/60"
             }`}
-            onClick={() => toggleWishlist(slug)}
+            onClick={() => void toggleWishlist(slug, destination)}
             type="button"
           >
             <Heart className={saved ? "fill-rose-500" : ""} size={18} />

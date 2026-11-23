@@ -17,11 +17,11 @@ import { useAuth } from "../context/AuthContext";
 import { useWishlist } from "../context/WishlistContext";
 import { YatreoMark } from "../components/layout/Logo";
 import * as projectsApi from "../services/projectsApi";
-import { destinations, whatsappUrl } from "../data/destinations";
+import { whatsappUrl } from "../data/destinations";
 
 export function DashboardPage() {
   const { user, isAdmin, loading: authLoading } = useAuth();
-  const { savedSlugs } = useWishlist();
+  const { savedDestinations } = useWishlist();
   const navigate = useNavigate();
 
   const [projects, setProjects] = useState([]);
@@ -86,7 +86,7 @@ export function DashboardPage() {
     }
   }
 
-  const wishlistDestinations = destinations.filter((d) => savedSlugs.includes(d.slug));
+  const wishlistDestinations = savedDestinations;
 
   if (authLoading || (!user && loading)) {
     return (

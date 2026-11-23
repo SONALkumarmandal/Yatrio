@@ -16,12 +16,12 @@ Docs: http://localhost:8000/docs · Tables are created on startup; the first adm
 app/
 ├── main.py                  app, middleware, router wiring (all under /api)
 ├── core/                    config, database (Neon), security (bcrypt/JWT), deps (auth guards)
-├── models/models.py         User, UserSession, Project, Doc, Destination, ActivityLog
+├── models/models.py         User, UserSession, Project, Doc, Destination, Favorite, ActivityLog
 ├── schemas/                 Pydantic request/response models
 ├── services/                cloudinary_service, activity (audit log)
 └── routers/
     ├── auth.py              /api/auth/{register,login,logout}
-    ├── users.py             /api/users/me (GET, PUT, DELETE)
+    ├── users.py             /api/users/me and per-user favorites
     ├── projects.py          /api/projects[/{id}]
     ├── docs.py              /api/docs[/{id}]
     └── admin/               /api/admin/{users,projects,destinations,analytics}
@@ -31,6 +31,8 @@ app/
 - Login verifies the bcrypt hash, creates a `user_sessions` row, and issues a JWT whose `jti` points at that row.
 - The JWT is returned in the response body. Send it as `Authorization: Bearer <token>`.
 - Every request checks the JWT signature/expiry **and** that the session row is not revoked, so logout, suspension and password change take effect immediately.
+- `GET /api/users/me/favorites` returns the signed-in user's saved published destinations. `PUT` and `DELETE /api/users/me/favorites/{slug}` add and remove them; favorites are unique per user/destination and never shared between accounts.
+- Registration passwords must be at least 8 characters, contain a letter and a digit, and fit bcrypt's 72-byte limit. Usernames are 3–50 characters using letters, numbers, `.`, `_`, or `-`.
 - Authentication is bearer-token only; browsers do not automatically attach the `Authorization` header cross-site, so cookie-based CSRF does not apply.
 - Set `ENVIRONMENT=production`, `CORS_ORIGINS=https://yatrio.vercel.app`, and a generated `JWT_SECRET_KEY` in the backend deployment environment. Generate it with `python -c "import secrets; print(secrets.token_urlsafe(48))"`. Never reuse or commit production secrets.
 

@@ -25,6 +25,30 @@ function parseBody(body) {
   return body;
 }
 
+function formatApiError(data) {
+  const detail = data?.detail;
+  if (Array.isArray(detail)) {
+    return detail
+      .map((item) => {
+        const field = Array.isArray(item.loc)
+          ? item.loc.filter((part) => !["body", "query", "path"].includes(part)).pop()
+          : null;
+        const label = {
+          email: "Email",
+          username: "Username",
+          password: "Password",
+          full_name: "Full name",
+        }[field] || field;
+        const message = (item.msg || "Invalid value").replace(/^Value error,\s*/, "");
+        return label ? `${label}: ${message}` : message;
+      })
+      .join("; ");
+  }
+  if (typeof detail === "string") return detail;
+  if (typeof data?.message === "string") return data.message;
+  return "An unexpected error occurred";
+}
+
 // In-browser mock handler for offline / manual testing with demoDb
 function handleDemoDbRequest(endpoint, options = {}) {
   const method = (options.method || "GET").toUpperCase();
@@ -160,8 +184,7 @@ export async function request(endpoint, options = {}) {
     const data = await response.json().catch(() => null);
 
     if (!response.ok) {
-      const errorMsg = data?.detail || data?.message || "An unexpected error occurred";
-      const error = new Error(typeof errorMsg === "string" ? errorMsg : JSON.stringify(errorMsg));
+      const error = new Error(formatApiError(data));
       error.status = response.status;
       error.data = data;
       throw error;

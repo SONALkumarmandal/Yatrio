@@ -6,10 +6,15 @@ from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 
 
 def _check_password(v: str) -> str:
-    if len(v.encode("utf-8")) > 72:
-        raise ValueError("Password must be at most 72 bytes (bcrypt limit)")
+    _check_password_length(v)
     if not (re.search(r"[A-Za-z]", v) and re.search(r"\d", v)):
         raise ValueError("Password must contain letters and digits")
+    return v
+
+
+def _check_password_length(v: str) -> str:
+    if len(v.encode("utf-8")) > 72:
+        raise ValueError("Password must be at most 72 bytes (bcrypt limit)")
     return v
 
 
@@ -25,6 +30,8 @@ class RegisterRequest(BaseModel):
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str
+
+    _pw_length = field_validator("password")(_check_password_length)
 
 
 class UserOut(BaseModel):

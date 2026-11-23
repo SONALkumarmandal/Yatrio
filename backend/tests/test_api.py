@@ -161,6 +161,131 @@ def test_auth_registration_and_login(client):
     assert me_res.json()["username"] == "traveler1"
 
 
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("email", "not-an-email"),
+        ("username", "invalid username"),
+        ("password", "short1"),
+        ("password", "password-only"),
+        ("password", "12345678"),
+        ("password", "a1" + "é" * 36),
+        ("full_name", "x" * 121),
+    ],
+)
+def test_registration_reports_invalid_fields(client, field, value):
+    payload = {
+        "email": "validation@example.com",
+        "username": "validation_user",
+        "full_name": "Validation User",
+        "password": "Validpass123",
+    }
+    payload[field] = value
+    response = client.post("/api/auth/register", json=payload)
+
+    assert response.status_code == 422
+    assert any(field in error["loc"] for error in response.json()["detail"])
+
+
+def test_login_rejects_password_over_bcrypt_limit(client):
+    response = client.post(
+        "/api/auth/login",
+        json={"email": "traveler@yatrio.com", "password": "a1" + "é" * 36},
+    )
+
+    assert response.status_code == 422
+    assert any("password" in error["loc"] for error in response.json()["detail"])
+
+
+def test_profile_update_validates_username_and_password(client):
+    login = client.post(
+        "/api/auth/login",
+        json={"email": "admin_test@yatrio.com", "password": "Admin12345!"},
+    )
+    headers = {"Authorization": f"Bearer {login.json()['access_token']}"}
+
+    invalid_username = client.put(
+        "/api/users/me",
+        headers=headers,
+        data={"username": "not a valid username"},
+    )
+    assert invalid_username.status_code == 422
+    assert any("username" in error["loc"] for error in invalid_username.json()["detail"])
+
+    invalid_password = client.put(
+        "/api/users/me",
+        headers=headers,
+        data={"new_password": "password-only"},
+    )
+    assert invalid_password.status_code == 422
+    assert "letters and digits" in invalid_password.json()["detail"]
+
+
+def test_favorites_are_private_to_each_user_and_idempotent(client):
+    credentials = [
+        {
+            "email": "favorites_one@example.com",
+            "username": "favorites_one",
+            "password": "FavoritePass123",
+        },
+        {
+            "email": "favorites_two@example.com",
+            "username": "favorites_two",
+            "password": "FavoritePass456",
+        },
+    ]
+    tokens = []
+    for account in credentials:
+        registration = client.post(
+            "/api/auth/register",
+            json={**account, "full_name": account["username"]},
+        )
+        assert registration.status_code == 201, registration.text
+        login = client.post(
+            "/api/auth/login",
+            json={"email": account["email"], "password": account["password"]},
+        )
+        assert login.status_code == 200
+        tokens.append(login.json()["access_token"])
+
+    first_headers = {"Authorization": f"Bearer {tokens[0]}"}
+    second_headers = {"Authorization": f"Bearer {tokens[1]}"}
+
+    assert client.put("/api/users/me/favorites/kerala", headers=first_headers).status_code == 204
+    assert client.put("/api/users/me/favorites/kerala", headers=first_headers).status_code == 204
+    first_favorites = client.get("/api/users/me/favorites", headers=first_headers)
+    second_favorites = client.get("/api/users/me/favorites", headers=second_headers)
+    assert first_favorites.status_code == second_favorites.status_code == 200
+    assert [item["slug"] for item in first_favorites.json()] == ["kerala"]
+    assert second_favorites.json() == []
+
+    assert client.delete("/api/users/me/favorites/kerala", headers=first_headers).status_code == 204
+    assert client.get("/api/users/me/favorites", headers=first_headers).json() == []
+
+
+def test_favorite_requires_authentication_and_published_destination(client):
+    assert client.get("/api/users/me/favorites").status_code == 401
+
+    with TestingSessionLocal() as db:
+        destination = Destination(
+            slug="private-favorite-test",
+            title="Private destination",
+            is_published=False,
+        )
+        db.add(destination)
+        db.commit()
+
+    login = client.post(
+        "/api/auth/login",
+        json={"email": "admin_test@yatrio.com", "password": "Admin12345!"},
+    )
+    headers = {"Authorization": f"Bearer {login.json()['access_token']}"}
+    assert client.put(
+        "/api/users/me/favorites/private-favorite-test",
+        headers=headers,
+    ).status_code == 404
+
+
 def test_public_destinations(client):
     res = client.get("/api/destinations")
     assert res.status_code == 200

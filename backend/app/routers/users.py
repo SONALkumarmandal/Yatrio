@@ -1,12 +1,14 @@
-from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, UploadFile, status
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, Response, UploadFile, status
 from pydantic import EmailStr
 from sqlalchemy import select, update
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.core.deps import get_current_user
 from app.core.security import hash_password, verify_password
-from app.models import Doc, User, UserSession
+from app.models import Destination, Doc, Favorite, User, UserSession
+from app.schemas.destination import DestinationOut
 from app.schemas.user import UserOut, _check_password
 from app.services import cloudinary_service as cdn
 from app.services.activity import log_activity
@@ -19,10 +21,75 @@ def get_me(user: User = Depends(get_current_user)):
     return user
 
 
+@router.get("/me/favorites", response_model=list[DestinationOut])
+def get_my_favorites(user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    return db.scalars(
+        select(Destination)
+        .join(Favorite, Favorite.destination_id == Destination.id)
+        .where(Favorite.user_id == user.id, Destination.is_published.is_(True))
+        .order_by(Favorite.created_at.desc())
+    ).all()
+
+
+@router.put("/me/favorites/{slug}", status_code=status.HTTP_204_NO_CONTENT)
+def add_favorite(
+    slug: str,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    destination = db.scalar(
+        select(Destination).where(
+            Destination.slug == slug,
+            Destination.is_published.is_(True),
+        )
+    )
+    if not destination:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Destination not found")
+
+    existing = db.scalar(
+        select(Favorite).where(
+            Favorite.user_id == user.id,
+            Favorite.destination_id == destination.id,
+        )
+    )
+    if not existing:
+        db.add(Favorite(user_id=user.id, destination_id=destination.id))
+        try:
+            db.commit()
+        except IntegrityError:
+            db.rollback()
+            if not db.scalar(
+                select(Favorite).where(
+                    Favorite.user_id == user.id,
+                    Favorite.destination_id == destination.id,
+                )
+            ):
+                raise
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.delete("/me/favorites/{slug}", status_code=status.HTTP_204_NO_CONTENT)
+def remove_favorite(
+    slug: str,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    favorite = db.scalar(
+        select(Favorite)
+        .join(Destination, Favorite.destination_id == Destination.id)
+        .where(Favorite.user_id == user.id, Destination.slug == slug)
+    )
+    if favorite:
+        db.delete(favorite)
+        db.commit()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
 @router.put("/me", response_model=UserOut)
 def update_me(
     full_name: str | None = Form(None, max_length=120),
-    username: str | None = Form(None, min_length=3, max_length=50),
+    username: str | None = Form(None, min_length=3, max_length=50, pattern=r"^[A-Za-z0-9_.-]+$"),
     email: EmailStr | None = Form(None),
     current_password: str | None = Form(None),
     new_password: str | None = Form(None, min_length=8),
@@ -42,12 +109,12 @@ def update_me(
         user.full_name = full_name
 
     if new_password:
-        if not current_password or not verify_password(current_password, user.hashed_password):
-            raise HTTPException(status.HTTP_400_BAD_REQUEST, "Current password is incorrect")
         try:
             _check_password(new_password)
         except ValueError as e:
-            raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, str(e))
+            raise HTTPException(status.HTTP_422_UNPROCESSABLE_CONTENT, str(e))
+        if not current_password or not verify_password(current_password, user.hashed_password):
+            raise HTTPException(status.HTTP_400_BAD_REQUEST, "Current password is incorrect")
         user.hashed_password = hash_password(new_password)
         # password change signs out every other session
         db.execute(update(UserSession).where(UserSession.user_id == user.id).values(revoked=True))

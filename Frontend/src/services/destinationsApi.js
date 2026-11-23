@@ -1,7 +1,7 @@
 import { request } from "./api";
 import { destinations as localDestinations, regions as localRegions } from "../data/destinations";
 
-function normalizeDestination(d) {
+export function normalizeDestination(d) {
   // Normalize both backend model format and local mock format
   const imageUrl =
     d.media && d.media.length > 0

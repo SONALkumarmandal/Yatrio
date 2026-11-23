@@ -53,7 +53,7 @@ Confirmed per Brand Board v1.0:
   - Silky Lenis smooth scrolling with motion accessibility detection.
   - Interactive **15-second Vibe Matcher** quiz on the homepage.
   - Interactive **Custom Trip Builder** (`/plan`) with live budget slider, per-day estimates, traveler steppers, and instant WhatsApp itinerary blueprint export.
-  - **Trip Wishlist / Bookmark Store** (single-tap heart toggle with offline persistence).
+  - **Trip Wishlist / Bookmark Store** (per-account favorites with separate guest-browser persistence).
   - Floating **Human Concierge Pill** with real-time online status indicator.
   - Shareable trips with native Web Share API & clipboard toast notifications.
 - **FastAPI REST API**:

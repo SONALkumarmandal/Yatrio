@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowRight, KeyRound, Mail, User } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import { Logo, YatreoMark } from "../components/layout/Logo";
+import { Logo } from "../components/layout/Logo";
 
 export function LoginPage() {
   const [isRegister, setIsRegister] = useState(false);
@@ -11,6 +11,7 @@ export function LoginPage() {
   const [username, setUsername] = useState("");
   const [fullName, setFullName] = useState("");
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
   const { login, register } = useAuth();
@@ -19,26 +20,84 @@ export function LoginPage() {
 
   const from = location.state?.from?.pathname || "/dashboard";
 
+  function validateRegistration() {
+    const errors = {};
+    const normalizedEmail = email.trim();
+    const normalizedUsername = username.trim();
+    const normalizedName = fullName.trim();
+    const passwordLength = Array.from(password).length;
+    const passwordBytes = new TextEncoder().encode(password).length;
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+      errors.email = "Enter a valid email address.";
+    }
+    if (normalizedUsername.length < 3 || normalizedUsername.length > 50) {
+      errors.username = "Username must be between 3 and 50 characters.";
+    } else if (!/^[A-Za-z0-9_.-]+$/.test(normalizedUsername)) {
+      errors.username = "Use only letters, numbers, periods, underscores, and hyphens.";
+    }
+    if (!normalizedName) {
+      errors.full_name = "Enter your full name.";
+    } else if (normalizedName.length > 120) {
+      errors.full_name = "Full name must be 120 characters or fewer.";
+    }
+    if (passwordLength < 8) {
+      errors.password = "Password must be at least 8 characters.";
+    } else if (passwordBytes > 72) {
+      errors.password = "Password must be at most 72 UTF-8 bytes.";
+    } else if (!/[A-Za-z]/.test(password) || !/\d/.test(password)) {
+      errors.password = "Password must contain at least one letter and one number.";
+    }
+    return errors;
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
+    setFieldErrors({});
+
+    if (isRegister) {
+      const validationErrors = validateRegistration();
+      if (Object.keys(validationErrors).length > 0) {
+        setFieldErrors(validationErrors);
+        setError("Please correct the highlighted fields.");
+        return;
+      }
+    }
+
     setLoading(true);
 
     try {
       if (isRegister) {
-        if (!username || username.length < 3) {
-          throw new Error("Username must be at least 3 characters.");
-        }
-        if (!password || password.length < 8) {
-          throw new Error("Password must be at least 8 characters.");
-        }
-        await register({ email, username, fullName, password });
+        await register({
+          email: email.trim(),
+          username: username.trim(),
+          fullName: fullName.trim(),
+          password,
+        });
       } else {
-        await login(email, password);
+        await login(email.trim(), password);
       }
       navigate(from, { replace: true });
     } catch (err) {
-      setError(err.message || "Authentication failed. Please check your details.");
+      const details = err.data?.detail;
+      if (isRegister && Array.isArray(details)) {
+        const validationErrors = {};
+        for (const detail of details) {
+          const field = Array.isArray(detail.loc) ? detail.loc[detail.loc.length - 1] : null;
+          if (["email", "username", "full_name", "password"].includes(field)) {
+            validationErrors[field] = (detail.msg || "Invalid value").replace(/^Value error,\s*/, "");
+          }
+        }
+        setFieldErrors(validationErrors);
+        setError(
+          Object.keys(validationErrors).length > 0
+            ? "Please correct the highlighted fields."
+            : err.message || "Authentication failed. Please check your details."
+        );
+      } else {
+        setError(err.message || "Authentication failed. Please check your details.");
+      }
     } finally {
       setLoading(false);
     }
@@ -73,14 +132,22 @@ export function LoginPage() {
                 <div className="relative mt-1">
                   <User className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" size={16} />
                   <input
-                    className="w-full rounded-xl border border-sand/80 bg-cream/30 py-2.5 pl-10 pr-4 text-sm text-ink outline-none transition focus:border-teal focus:bg-white focus:ring-2 focus:ring-teal/10"
-                    onChange={(e) => setFullName(e.target.value)}
+                    aria-invalid={Boolean(fieldErrors.full_name)}
+                    className={`w-full rounded-xl border ${fieldErrors.full_name ? "border-red-400" : "border-sand/80"} bg-cream/30 py-2.5 pl-10 pr-4 text-sm text-ink outline-none transition focus:border-teal focus:bg-white focus:ring-2 focus:ring-teal/10`}
+                    maxLength={120}
+                    name="full_name"
+                    onChange={(e) => {
+                      setFullName(e.target.value);
+                      setError("");
+                      setFieldErrors((current) => ({ ...current, full_name: "" }));
+                    }}
                     placeholder="e.g. Ananya Sharma"
                     required
                     type="text"
                     value={fullName}
                   />
                 </div>
+                {fieldErrors.full_name && <p className="mt-1 text-xs text-red-600">{fieldErrors.full_name}</p>}
               </div>
 
               <div>
@@ -88,14 +155,22 @@ export function LoginPage() {
                 <div className="relative mt-1">
                   <User className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" size={16} />
                   <input
-                    className="w-full rounded-xl border border-sand/80 bg-cream/30 py-2.5 pl-10 pr-4 text-sm text-ink outline-none transition focus:border-teal focus:bg-white focus:ring-2 focus:ring-teal/10"
-                    onChange={(e) => setUsername(e.target.value)}
+                    aria-invalid={Boolean(fieldErrors.username)}
+                    className={`w-full rounded-xl border ${fieldErrors.username ? "border-red-400" : "border-sand/80"} bg-cream/30 py-2.5 pl-10 pr-4 text-sm text-ink outline-none transition focus:border-teal focus:bg-white focus:ring-2 focus:ring-teal/10`}
+                    maxLength={50}
+                    name="username"
+                    onChange={(e) => {
+                      setUsername(e.target.value);
+                      setError("");
+                      setFieldErrors((current) => ({ ...current, username: "" }));
+                    }}
                     placeholder="traveler123"
                     required
                     type="text"
                     value={username}
                   />
                 </div>
+                {fieldErrors.username && <p className="mt-1 text-xs text-red-600">{fieldErrors.username}</p>}
               </div>
             </>
           )}
@@ -105,14 +180,21 @@ export function LoginPage() {
             <div className="relative mt-1">
               <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" size={16} />
               <input
-                className="w-full rounded-xl border border-sand/80 bg-cream/30 py-2.5 pl-10 pr-4 text-sm text-ink outline-none transition focus:border-teal focus:bg-white focus:ring-2 focus:ring-teal/10"
-                onChange={(e) => setEmail(e.target.value)}
+                aria-invalid={Boolean(fieldErrors.email)}
+                className={`w-full rounded-xl border ${fieldErrors.email ? "border-red-400" : "border-sand/80"} bg-cream/30 py-2.5 pl-10 pr-4 text-sm text-ink outline-none transition focus:border-teal focus:bg-white focus:ring-2 focus:ring-teal/10`}
+                name="email"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setError("");
+                  setFieldErrors((current) => ({ ...current, email: "" }));
+                }}
                 placeholder="you@example.com"
                 required
                 type="email"
                 value={email}
               />
             </div>
+            {fieldErrors.email && <p className="mt-1 text-xs text-red-600">{fieldErrors.email}</p>}
           </div>
 
           <div>
@@ -120,14 +202,26 @@ export function LoginPage() {
             <div className="relative mt-1">
               <KeyRound className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" size={16} />
               <input
-                className="w-full rounded-xl border border-sand/80 bg-cream/30 py-2.5 pl-10 pr-4 text-sm text-ink outline-none transition focus:border-teal focus:bg-white focus:ring-2 focus:ring-teal/10"
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder={isRegister ? "Min. 8 characters" : "••••••••"}
+                aria-invalid={Boolean(fieldErrors.password)}
+                className={`w-full rounded-xl border ${fieldErrors.password ? "border-red-400" : "border-sand/80"} bg-cream/30 py-2.5 pl-10 pr-4 text-sm text-ink outline-none transition focus:border-teal focus:bg-white focus:ring-2 focus:ring-teal/10`}
+                name="password"
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setError("");
+                  setFieldErrors((current) => ({ ...current, password: "" }));
+                }}
+                placeholder={isRegister ? "8+ chars, letters and numbers" : "••••••••"}
                 required
                 type="password"
                 value={password}
               />
             </div>
+            {fieldErrors.password && <p className="mt-1 text-xs text-red-600">{fieldErrors.password}</p>}
+            {isRegister && !fieldErrors.password && (
+              <p className="mt-1 text-[11px] text-muted">
+                Use at least 8 characters with a letter and a number (maximum 72 UTF-8 bytes).
+              </p>
+            )}
           </div>
 
           <button
@@ -146,6 +240,7 @@ export function LoginPage() {
             onClick={() => {
               setIsRegister(!isRegister);
               setError("");
+              setFieldErrors({});
             }}
             type="button"
           >

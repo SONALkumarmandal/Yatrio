@@ -18,6 +18,8 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     async function verifyUser() {
       if (!token) {
+        setUser(null);
+        localStorage.removeItem("yatrio_user");
         setLoading(false);
         return;
       }

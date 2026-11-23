@@ -72,7 +72,7 @@ export function ImageCard({ destination, className = "" }) {
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          toggleWishlist(slug);
+          void toggleWishlist(slug, destination);
         }}
         title={saved ? "Saved" : "Save trip"}
         type="button"
